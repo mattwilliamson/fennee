@@ -1,6 +1,6 @@
 "":
   hardware_interface:
-     loop_hz: 200 # hz
+     loop_hz: 10 # hz
      joints:
         - front_left_shoulder
         - front_left_leg

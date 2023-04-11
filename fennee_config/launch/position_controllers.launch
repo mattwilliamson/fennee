@@ -1,6 +1,6 @@
 <launch>
     <arg name="robot_name"       default="/"/>
-    <arg name="ros_control_file" default="$(find fennee_config)/config/ros_control.yaml" />
+    <arg name="ros_control_file" default="$(find fennee_config)/config/ros_control/ros_control.yaml" />
 
     <group ns="$(arg robot_name)">
         <rosparam file="$(arg ros_control_file)"  				   command="load"/>

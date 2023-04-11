@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>fennee_control</name>
+  <version>0.0.0</version>
+  <description>The fennee_control package</description>
+
+  <maintainer email="matt@aimatt.com">Matt Williamson</maintainer>
+  <author email="matt@aimatt.com">Matt Williamson</author>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <!-- <exec_depend>cv_bridge</exec_depend> -->
+  <exec_depend>numpy</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>trajectory_msgs</exec_depend>
+</package>

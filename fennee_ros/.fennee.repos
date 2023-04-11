@@ -15,3 +15,7 @@ repositories:
     type: git
     url: https://github.com/ldrobotSensorTeam/ldlidar_stl_ros.git
     version: master
+  ros_serial:
+    type: git
+    url: https://github.com/ros-drivers/rosserial.git
+    version: 0.9.1

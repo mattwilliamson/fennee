@@ -1,5 +1,5 @@
 {
-    "urdf_path": "$(find fennee_description)/urdf/fenneeai.urdf", 
+    "urdf_path": "$(find fennee_description)/urdf/fennee.urdf", 
     "links": {
         "right_hind": [
             "rear_right_shoulder_link", 
