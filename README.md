@@ -80,17 +80,18 @@ With a PS4/DS4 controller:
 
 ### Hardware
 
-```
+```sh
 roslaunch fennee_config bringup.launch hardware_connected:=true
 
 roslaunch champ_teleop teleop.launch joy:=true
 
-rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB0 _baud:=500000
+# rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB0 _baud:=500000
+rosrun rosserial_python serial_node.py tcp port:=11411
 
 rostopic echo joint_states
 ```
 
-```
+```sh
 roslaunch fennee_config bringup.launch hardware_connected:=true 
 ```
 
@@ -120,7 +121,8 @@ rqt_console
 - [ ] Faster baud rate
 - [ ] Option to connecto to TCP rosserial
 - [ ] Calibration config file
-- [ ] Publish servo PWM
-- [ ] Publish joint state from micro
 - [ ] Wiring diagrams
 - [ ] 3d print instructions/list
+- [ ] Show loading screen while robot is waiting for ROS
+- [ ] LED ring
+- [ ] LIDAR

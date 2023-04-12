@@ -1,3 +1,14 @@
+// Create a wifi.h file with the following contents:
+// #define WIFI_SSID "ssid"
+// #define WIFI_PASS "passwod"
+#include "wifi.h"
+
+#include <WiFi.h>
+// Set the rosserial socket server IP address
+IPAddress server(192,168,50,42);
+// Set the rosserial socket server port
+const uint16_t serverPort = 11411;
+
 #define SERIAL_BAUD 500000
 #define I2C_SPEED 400000
 #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
@@ -5,12 +16,15 @@
 #define SERVO_DUTY_TOPIC "servo_duty"
 #define JOINT_STATES_TOPIC "joint_states"
 
+
 // This is a hack to prevent trying to connect to a WiFi network by default
 // https://github.com/frankjoshua/rosserial_arduino_lib/blob/master/src/ros.h#L40
 // https://github.com/espressif/arduino-esp32/issues/4807
-#undef ESP32
+// #undef ESP32
+// #include <ros.h>
+// #define ESP32
+
 #include <ros.h>
-#define ESP32
 
 // TODO: Publish to joint_states per https://github.com/chvmp/champ/wiki/Hardware-Integration
 
@@ -62,19 +76,42 @@ ros::Subscriber<std_msgs::UInt16MultiArray> servoDutyCycles(SERVO_DUTY_TOPIC, se
 
 void setup()
 {
-  nh.initNode();
   Serial.begin(SERIAL_BAUD);
-  Wire.setClock(I2C_SPEED);
-  pca9685.begin();
-  pca9685.setOscillatorFrequency(PCA9685_SPEED);
-  pca9685.setPWMFreq(SERVO_FREQ);
+
+  Serial.println("\nConnecting to WiFi SSID " WIFI_SSID "");
+
+  // WiFi.mode(WIFI_STA); //Optional
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.println("\nwaiting for wifi...");
+
+  while(WiFi.status() != WL_CONNECTED){
+    Serial.print(".");
+    delay(100);
+  }
+
+  Serial.println("\nConnected.");
+  Serial.print("Local ESP32 IP: ");
+  Serial.println(WiFi.localIP());
+
+  // Set the connection to rosserial socket server
+  nh.getHardware()->setConnection(server, serverPort);
+
+  Serial.println("\nConnecting to rosserial TCP socket at " + server.toString() + ":" + serverPort);
+
+  nh.initNode();
 
   //nh.advertise(jointStates);
   nh.advertise(chatter);
   nh.subscribe(servoDutyCycles);
   // nh.subscribe(sub);
 
-  nh.loginfo("robot initialized");
+  // TODO: Keep getting error: [Wire.cpp:381] setClock(): could not acquire lock
+  Wire.setClock(I2C_SPEED);
+  pca9685.begin();
+  pca9685.setOscillatorFrequency(PCA9685_SPEED);
+  pca9685.setPWMFreq(SERVO_FREQ);
+
+  nh.loginfo("Fennee robot started");
 }
 
 void loop()
@@ -82,7 +119,9 @@ void loop()
   // Wait for a connection
   while (!nh.connected())
   {
+    Serial.println("Waiting for rosserial TCP socket connection...");
     nh.spinOnce();
+    sleep(100);
   }
 
   nh.spinOnce();
