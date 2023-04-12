@@ -22,6 +22,7 @@ DEGREES_PER_PWM = 180.0 / 285.0 # 285 pwm = 180 degrees
 
 import rospy
 import numpy as np
+import math
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 from std_msgs.msg import UInt16MultiArray
@@ -97,6 +98,7 @@ class ServoInterface:
         self.publish_joint_state(names, cmd)
 
     def publish_servo_positions(self, names, cmd: JointTrajectoryPoint):
+        # rospy.loginfo("publish_servo_positions")
         # TODO: Transform joint positions to servo positions to pwm values
         angles = np.array(cmd.positions)
         # print(self.get_joint_names())
@@ -115,6 +117,7 @@ class ServoInterface:
 
 
 if __name__ == "__main__":
+    rospy.loginfo("Started servo_interface")
     servo_interface = ServoInterface()
     while not rospy.is_shutdown():
         rospy.spin()

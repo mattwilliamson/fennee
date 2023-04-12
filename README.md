@@ -85,8 +85,7 @@ roslaunch fennee_config bringup.launch hardware_connected:=true
 
 roslaunch champ_teleop teleop.launch joy:=true
 
-# rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB0 _baud:=500000
-rosrun rosserial_python serial_node.py tcp port:=11411
+rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB0 _baud:=500000
 
 rostopic echo joint_states
 ```
