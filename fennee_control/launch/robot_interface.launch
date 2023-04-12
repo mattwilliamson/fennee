@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
     <node name="robot_interface" pkg="rosserial_python" type="serial_node.py">
-        <!-- args="_port:=/dev/ttyUSB0 _baud:=115200"> -->
+        <!-- args="_port:=/dev/ttyUSB0 _baud:=500000"> -->
         <param name="port" value="/dev/ttyUSB0" />
-        <param name="baud" value="115200" />
+        <param name="baud" value="500000" />
         </node>
 
     <!-- <node if="$(arg lite)" pkg="rosserial_python" name="rosserial_champ" type="serial_node.py"

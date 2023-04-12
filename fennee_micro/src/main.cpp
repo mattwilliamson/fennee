@@ -1,4 +1,9 @@
+#define SERIAL_BAUD 500000
+#define I2C_SPEED 400000
 #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+#define PCA9685_SPEED 26000000 // 25MHz calibration
+#define SERVO_DUTY_TOPIC "servo_duty"
+#define JOINT_STATES_TOPIC "joint_states"
 
 // This is a hack to prevent trying to connect to a WiFi network by default
 // https://github.com/frankjoshua/rosserial_arduino_lib/blob/master/src/ros.h#L40
@@ -43,54 +48,47 @@ int servoChannels[12] = {
 
 void servo_cb(const std_msgs::UInt16MultiArray &input)
 {
-  // We get a list of positions to achieve
-  // Set the servo position for each joint in each position
+  // We get a list of PWM signals for each joint
+  // It might be cleaner to do the conversion here instead of server-side
+  // but this adds a lot more flexibility without having to flash the micro
   // TODO: Publish the new position to joint_states
   for (size_t i = 0; i < input.data_length; i++)
   {
     pca9685.setPWM(servoChannels[i], 0, input.data[i]);
   }
-
 }
 
-ros::Subscriber<std_msgs::UInt16MultiArray> servoDutyCycles("servo_duty_cycles", servo_cb);
+ros::Subscriber<std_msgs::UInt16MultiArray> servoDutyCycles(SERVO_DUTY_TOPIC, servo_cb);
 
 void setup()
 {
   nh.initNode();
-  Serial.begin(115200);
-
-  Wire.setClock(400000);
+  Serial.begin(SERIAL_BAUD);
+  Wire.setClock(I2C_SPEED);
   pca9685.begin();
-    /*
-    * In theory the internal oscillator (clock) is 25MHz but it really isn't
-    * that precise. You can 'calibrate' this by tweaking this number until
-    * you get the PWM update frequency you're expecting!
-    * The int.osc. for the PCA9685 chip is a range between about 23-27MHz and
-    * is used for calculating things like writeMicroseconds()
-    * Analog servos run at ~50 Hz updates, It is importaint to use an
-    * oscilloscope in setting the int.osc frequency for the I2C PCA9685 chip.
-    * 1) Attach the oscilloscope to one of the PWM signal pins and ground on
-    *    the I2C PCA9685 chip you are setting the value for.
-    * 2) Adjust setOscillatorFrequency() until the PWM update frequency is the
-    *    expected value (50Hz for most ESCs)
-    * Setting the value here is specific to each individual I2C PCA9685 chip and
-    * affects the calculations for the PWM update frequency.
-    * Failure to correctly set the int.osc value will cause unexpected PWM results
-    */
-  // pca9685.setOscillatorFrequency(27000000);
-  pca9685.setOscillatorFrequency(26000000);
-  pca9685.setPWMFreq(SERVO_FREQ); // Analog servos run at ~50 Hz updates
+  pca9685.setOscillatorFrequency(PCA9685_SPEED);
+  pca9685.setPWMFreq(SERVO_FREQ);
 
   //nh.advertise(jointStates);
   nh.advertise(chatter);
   nh.subscribe(servoDutyCycles);
   // nh.subscribe(sub);
+
+  nh.loginfo("robot initialized");
 }
 
 void loop()
 {
+  // Wait for a connection
+  while (!nh.connected())
+  {
+    nh.spinOnce();
+  }
+
   nh.spinOnce();
-  str_msg.data = "after spin";
-  chatter.publish(&str_msg);
+  // str_msg.data = "after spin";
+  // chatter.publish(&str_msg);
+
+  // delay(1000);
+  // nh.loginfo("looping");
 }

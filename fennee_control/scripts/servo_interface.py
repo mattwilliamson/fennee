@@ -17,6 +17,8 @@ JOINT_STATES_TOPIC = "joint_states"
 JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
 QUEUE_SIZE = 10
 RAD_TO_DEG = 57.2958
+DEGREES_PER_PWM = 180.0 / 285.0 # 285 pwm = 180 degrees
+
 
 import rospy
 import numpy as np
@@ -28,18 +30,18 @@ from std_msgs.msg import UInt16MultiArray
 # Manual calibration for now
 pwm_map = [
     # min pwn, max pwm, sit pwm, stand pwm, sit angle, stand angle
-    (400.0,     308.0,   400.0,    400.0,   0.0000000,   0.000000),  # front_left_shoulder
-    (351.0,     100.0,   351.0,    314.0,   1.579998,    1.132637),  # front_left_leg
-    (550.0,     137.0,   113.0,    256.0,   -2.576207,   -1.92721),  # front_left_foot
-    (386.0,     256.0,   297.0,    297.0,   0.000000,    -0.000000), # front_right_shoulder
-    (216.0,     520.0,   260.0,    297.0,   1.579998,    1.132637),  # front_right_leg
-    (362.0,     115.0,   505.0,    362.0,   -2.576207,   -1.92721),  # front_right_foot
-    (393.0,     308.0,   328.0,    328.0,   0.0000000,   0.000000),  # rear_left_shoulder
-    (383.0,     132.0,   383.0,    347.0,   1.579998,    1.132637),  # rear_left_leg
-    (550.0,     137.0,   113.0,    256.0,   -2.576207,   -1.92721),  # rear_left_foot
-    (225.0,     358.0,   318.0,    318.0,   0.0000000,   -0.000000), # rear_right_shoulder
-    (218.0,     522.0,   262.0,    299.0,   1.579998,    1.132637),  # rear_right_leg
-    (366.0,     119.0,   509.0,    366.0,   -2.576207,   -1.92721),  # rear_right_foot
+    (100.0,     900.0,   400.0,    400.0,   0.0000000,   0.000000),  # front_left_shoulder
+    (100.0,     900.0,   351.0,    314.0,   1.579998,    1.132637),  # front_left_leg
+    (100.0,     900.0,   113.0,    256.0,   -2.576207,   -1.92721),  # front_left_foot
+    (100.0,     900.0,   297.0,    297.0,   0.000000,    -0.00000),  # front_right_shoulder
+    (100.0,     900.0,   260.0,    297.0,   1.579998,    1.132637),  # front_right_leg
+    (100.0,     900.0,   505.0,    362.0,   -2.576207,   -1.92721),  # front_right_foot
+    (100.0,     900.0,   328.0,    328.0,   0.0000000,   0.000000),  # rear_left_shoulder
+    (100.0,     900.0,   383.0,    347.0,   1.579998,    1.132637),  # rear_left_leg
+    (100.0,     900.0,   113.0,    256.0,   -2.576207,   -1.92721),  # rear_left_foot
+    (100.0,     900.0,   318.0,    318.0,   0.0000000,   -0.00000),  # rear_right_shoulder
+    (100.0,     900.0,   262.0,    299.0,   1.579998,    1.132637),  # rear_right_leg
+    (100.0,     900.0,   509.0,    366.0,   -2.576207,   -1.92721),  # rear_right_foot
 ]
 
 def joint_state_to_pwm(angle, pwm_map_row):
@@ -85,6 +87,9 @@ class ServoInterface:
 
 
     def publish_positions(self, event):
+        if not self.joint_positions:
+            # No commands received yet
+            return
         # print("Timer called at " + str(event.current_real))
         cmd = self.joint_positions.points[0]
         names = self.get_joint_names()
