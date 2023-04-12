@@ -5,6 +5,12 @@
 #define SERVO_DUTY_TOPIC "servo_duty_cycles"
 #define JOINT_STATES_TOPIC "joint_states"
 
+#include <WiFi.h>
+// Set the rosserial socket server IP address
+IPAddress server(192,168,50,42);
+// Set the rosserial socket server port
+const uint16_t serverPort = 11411;
+
 int servoChannels[12] = {
     2,  // front_left_shoulder
     1,  // front_left_leg
@@ -20,6 +26,13 @@ int servoChannels[12] = {
     9   // rear_right_foot
 };
 
+// Create a wifi.h file with the following contents:
+// #define WIFI_SSID "ssid"
+// #define WIFI_PASS "passwod"
+#include "wifi.h"
+
+
+
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2
 #endif
@@ -27,9 +40,11 @@ int servoChannels[12] = {
 // This is a hack to prevent trying to connect to a WiFi network by default
 // https://github.com/frankjoshua/rosserial_arduino_lib/blob/master/src/ros.h#L40
 // https://github.com/espressif/arduino-esp32/issues/4807
-#undef ESP32
+// #undef ESP32
+// #include <ros.h>
+// #define ESP32
+
 #include <ros.h>
-#define ESP32
 
 // TODO: Publish to joint_states per https://github.com/chvmp/champ/wiki/Hardware-Integration
 
@@ -73,10 +88,26 @@ ros::Subscriber<std_msgs::UInt16MultiArray> servoDutyCycles(SERVO_DUTY_TOPIC, se
 
 void setup()
 {
-  pinMode(LED_BUILTIN, OUTPUT);
-  nh.initNode();
-
+  // nh.initNode();
   Serial.begin(SERIAL_BAUD);
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  Serial.println("Starting Fennee robot...");
+
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.println("\nwaiting for wifi...");
+
+  while(WiFi.status() != WL_CONNECTED){
+    Serial.print(".");
+    delay(100);
+  }
+
+  Serial.println("\nConnected.");
+  Serial.print("Local ESP32 IP: ");
+  Serial.println(WiFi.localIP());
+
+  nh.getHardware()->setConnection(server, serverPort);
+  nh.initNode();
 
   // TODO: Keep getting error: [Wire.cpp:381] setClock(): could not acquire lock
   // Wire.setClock(I2C_SPEED);

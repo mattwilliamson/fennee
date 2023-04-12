@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
-    <node name="rosserial_fennee" pkg="rosserial_python" type="serial_node.py" output="screen" respawn="true">
+    <!-- <node name="rosserial_fennee" pkg="rosserial_python" type="serial_node.py" output="screen" respawn="true">
         <param name="port" value="/dev/ttyUSB0" />
         <param name="baud" value="500000" />
-    </node>
+    </node> -->
 
-    <!-- <node name="robot_interface" pkg="rosserial_python" type="serial_node.py" output="screen" args="tcp port:=11411" /> -->
+    <node name="robot_interface" pkg="rosserial_python" type="serial_node.py" output="screen" args="tcp port:=11411" respawn="true" />
 
 </launch>
