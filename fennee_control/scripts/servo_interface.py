@@ -10,12 +10,12 @@ to avoid overflowing the serial buffer to the microcontroller.
 http://wiki.ros.org/rospy/Overview/Time
 """
 
-FREQUENCY = 50  # Hz
+FREQUENCY = 150  # Hz
 # FREQUENCY = 1  # Hz
 SERVO_STATES_TOPIC = "servo_duty_cycles"
 JOINT_STATES_TOPIC = "joint_states"
 JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
-QUEUE_SIZE = 10
+QUEUE_SIZE = 0
 
 
 import rospy
@@ -25,9 +25,27 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 from std_msgs.msg import UInt16MultiArray
 
-RAD_TO_DEG = 57.2958
 DEGREES_PER_PWM = 180.0 / 285.0 # 285 pwm / 180 degrees = 0.6315789474
 RADIANS_PER_PWM = math.pi / 285.0 # 0.01102313212
+
+JOINT_NAMES = [
+    "front_left_shoulder",
+    "front_left_leg",
+    "front_left_foot",
+    # "front_left_toe",
+    "front_right_shoulder",
+    "front_right_leg",
+    "front_right_foot",
+    # "front_right_toe",
+    "rear_left_shoulder",
+    "rear_left_leg",
+    "rear_left_foot",
+    # "rear_left_toe",
+    "rear_right_shoulder",
+    "rear_right_leg",
+    "rear_right_foot",
+    # "rear_right_toe",
+]
 
 # TODO: Publish joint angles to joint_state topic calculated from the pwm values
 # So we will show limits and everything
@@ -62,16 +80,16 @@ RADIANS_PER_PWM = math.pi / 285.0 # 0.01102313212
 pwm_map = [
     # min pwn, max pwm, center pwm, multiplier (reverse)
     (100.0,     900.0,   431.0,   1.0), # front_left_shoulder
-    (100.0,     900.0,   213.0,   1.0), # front_left_leg
-    (100.0,     900.0,   399.0,   1.0), # front_left_foot
+    (100.0,     900.0,   209.0,   1.0), # front_left_leg
+    (100.0,     900.0,   398.0,   1.0), # front_left_foot
     (100.0,     900.0,   323.0,   1.0), # front_right_shoulder
-    (100.0,     900.0,   391.0,  -1.0), # front_right_leg
+    (100.0,     900.0,   403.0,  -1.0), # front_right_leg
     (100.0,     900.0,   214.0,  -1.0), # front_right_foot
     (100.0,     900.0,   315.0,  -1.0), # rear_left_shoulder
-    (100.0,     900.0,   245.0,   1.0), # rear_left_leg
-    (100.0,     900.0,   401.0,   1.0), # rear_left_foot
+    (100.0,     900.0,   235.0,   1.0), # rear_left_leg
+    (100.0,     900.0,   400.0,   1.0), # rear_left_foot
     (100.0,     900.0,   309.0,  -1.0), # rear_right_shoulder
-    (100.0,     900.0,   398.0,  -1.0), # rear_right_leg
+    (100.0,     900.0,   405.0,  -1.0), # rear_right_leg
     (100.0,     900.0,   222.0,  -1.0), # rear_right_foot
 ]
 
@@ -123,6 +141,7 @@ class ServoInterface:
         self.joint_states_topic = rospy.Publisher(
             JOINT_STATES_TOPIC, JointState, queue_size=QUEUE_SIZE
         )
+        self.msg = JointState()
         rospy.init_node("servo_interface")
         rospy.Subscriber(
             JOINT_CONTROLLER_TOPIC,
@@ -149,7 +168,7 @@ class ServoInterface:
     def publish_servo_positions(self, names, cmd: JointTrajectoryPoint):
         # rospy.loginfo("publish_servo_positions")
         # TODO: Transform joint positions to servo positions to pwm values
-        angles = np.array(cmd.positions)
+        angles = cmd.positions
         # print(self.get_joint_names())
         # print(dict(zip(self.get_joint_names(), angles)))
         angles = joint_states_to_pwms(angles)
@@ -157,12 +176,15 @@ class ServoInterface:
         self.servo_states_topic.publish(msg)
 
     def publish_joint_state(self, names, cmd: JointTrajectoryPoint):
-        msg = JointState(name=names, position=np.array(cmd.positions))
+        msg = self.msg
         msg.header.stamp = rospy.Time.now()
+        msg.name = names
+        msg.position = tuple(cmd.positions)        
         self.joint_states_topic.publish(msg)
 
     def get_joint_names(self):
-        return self.joint_positions.joint_names
+        # return self.joint_positions.joint_names
+        return JOINT_NAMES
 
 
 if __name__ == "__main__":

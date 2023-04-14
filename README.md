@@ -3,6 +3,7 @@
 # Hardware
 
 ## Parts List
+
 - [SpotMicro](https://spotmicroai.readthedocs.io/en/latest/)
 - [NVIDIA Jetson Nano](https://www.amazon.com/NVIDIA-Jetson-Nano-Developer-945-13450-0000-100/dp/B084DSDDLT/ref=sr_1_3?crid=K3EEP2QYGRKR&keywords=NVIDIA+Jetson+Nano&qid=1681300762&s=electronics&sprefix=nvidia+jetson+nano%252Celectronics%252C161&sr=1-3&ufe=app_do%253Aamzn1.fos.f5122f16-c3e8-4386-bf32-63e904010ad0&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=7d3968aff925cd432b2f563af53e1284&camp=1789&creative=9325) for high-level control
 - [SD Card](https://www.amazon.com/dp/B07FCMBLV6?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=d9ee3513e15091796e6be4dad591e27c&camp=1789&creative=9325)
@@ -12,25 +13,33 @@
 - [LiPO Battery](https://www.amazon.com/dp/B086D71TZC?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=2e59462443f181c82c3a7a22fd7b1b8c&camp=1789&creative=9325) this one is 5200mAh 7.4v, but you have flexibility here
 - [Buck Converter](https://www.amazon.com/dp/B07Y7YB14L?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=9f2c21c8d2dcc244b0d85624aa2fc704&camp=1789&creative=9325)
 - 2x [Bearings](https://www.amazon.com/dp/B07JHKKGKT?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=92a49fcb0e2082979097c1ca9db1d71c&camp=1789&creative=9325)
-- [Lots](https://www.amazon.com/dp/B015A30R1I?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=4594994ca7d27816592dd19072e0148a&camp=1789&creative=9325) of [screws and nuts](https://www.amazon.com/dp/B08JCKH31Q?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=85b1b003df00aa2316b49650ea373ecb&camp=1789&creative=9325)
+- [Lots](https://www.amazon.com/dp/B015A30R1I?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=4594994ca7d27816592dd19072e0148a&camp=1789&creative=9325) of [m3 screws and nuts (some m2 as well)](https://www.amazon.com/dp/B08JCKH31Q?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=85b1b003df00aa2316b49650ea373ecb&camp=1789&creative=9325)
 - [PETG Filament](https://www.amazon.com/dp/B08JCKH31Q?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=85b1b003df00aa2316b49650ea373ecb&camp=1789&creative=9325)
 
+*Disclaimer: I did add Amazon affiliate links to these*
+
 ### Optional
+
 - [Waveshare AC8265](https://www.amazon.com/dp/B07SGDRG34?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=5afefd950c9ea730d13b46f8e915f168&camp=1789&creative=9325) WiFi and Bluetooth for Jetson Nano
 - [IPEX Wifi Antennas](https://www.amazon.com/Antenna-2-4GHz-Internal-Laptop-Wireless/dp/B08XN6WMXJ/ref=sr_1_3?crid=141NMPSVVCSRX&keywords=IPEX%252Bantenna%252B5ghz&qid=1681301616&s=electronics&sprefix=ipex%252Bantenna%252B5ghz%252Celectronics%252C103&sr=1-3&th=1&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=b760f9104679d63096c3b43a57f38a0c&camp=1789&creative=9325)
 - [Volt Display](https://www.amazon.com/dp/B0761MG9NS?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=fa09f95b7c494d9456b38b2fabb7f38a&camp=1789&creative=9325)
 - [Creality Ender 3 S1 Pro 3d printer](https://www.amazon.com/3D-High-Temperature-Removable-Touchscreen-Languages/dp/B09TKCY9HY/ref=sr_1_3?camp=1789&creative=9325&keywords=Creality+Ender+3+S1+Pro&linkCode=ur2&linkId=6745c52615b49225b7af7e0865687db1&qid=1681302453&sr=8-3&ufe=app_do%253Aamzn1.fos.c3015c4a-46bb-44b9-81a4-dc28e6d374b3&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=8694ab1cb75ba1d75b8df1cbfc0ca5be&camp=1789&creative=9325)
 
+## 3d Printed
+
+- [SpotMicro prints without supports](https://www.thingiverse.com/thing:4559827)
+- [Reinforced shoulders](https://www.thingiverse.com/thing:4937631)
+- [Silicone Molds for Feet](https://github.com/mattwilliamson/SpotMicroESP32/tree/master/parts/SpotMicroESP32_parts_v1_0_0/mods/silicone_foot_mould/Moule_part1.stl)
+- [Assembly Guide](https://github.com/mattwilliamson/SpotMicroESP32/tree/master/assembly) *Needs some updates*
 
 # Software
+
 - [Champ](https://github.com/chvmp/champ)
 - [PlatformIO](https://platformio.org/)
-- Ubuntu 20.04 *Ubuntu 18.04 (ROS Melodic) should work as well*
+- Ubuntu 20.04 _Ubuntu 18.04 (ROS Melodic) should work as well_
 - [ROS 1 Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
 
-
-
-*Ubuntu 18.04 (ROS Melodic) should work as well*
+_Ubuntu 18.04 (ROS Melodic) should work as well_
 
 ## Building
 
@@ -55,7 +64,6 @@ source devel/setup.bash
 
 ## Running
 
-
 ### Simulator
 
 ```sh
@@ -70,13 +78,12 @@ roslaunch champ_teleop teleop.launch joy:=true
 
 With a PS4/DS4 controller:
 
-| Input | Output |
-| --- | --- |
-| Left Stick | Walk/Yaw |
-| Right Stick | Pitch/Roll |
-| L1 (hold) | Holonomic (strafing) |
-| R2 | Sit |
-
+| Input       | Output               |
+| ----------- | -------------------- |
+| Left Stick  | Walk/Yaw             |
+| Right Stick | Pitch/Roll           |
+| L1 (hold)   | Holonomic (strafing) |
+| R2          | Sit                  |
 
 ### Hardware
 
@@ -91,9 +98,8 @@ rostopic echo joint_states
 ```
 
 ```sh
-roslaunch fennee_config bringup.launch hardware_connected:=true 
+roslaunch fennee_config bringup.launch hardware_connected:=true
 ```
-
 
 ### Calibration
 
@@ -105,16 +111,26 @@ roslaunch fennee_config bringup.launch hardware_connected:=true publish_joint_co
 roslaunch champ_bringup joints_gui.launch
 ```
 
+fennee_config/config/gait/gait.yaml has `com_x_translation` to shift the center of balance from the front to the back. 
+`0.01` increments (in meters) have been useful for me.
+
 ### Watching logs
 
 GUI
+
 ```
 rqt_console
 ```
 
+### Credits
+https://github.com/chvmp
+https://github.com/michaelkubina/SpotMicroESP32
+https://spotmicroai.readthedocs.io/en/latest/
+https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [ ] Front camera
 - [ ] IMU Publisher
 - [ ] Calibration
 - [ ] Faster baud rate
