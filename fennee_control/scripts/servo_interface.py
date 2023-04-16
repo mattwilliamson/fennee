@@ -80,17 +80,17 @@ JOINT_NAMES = [
 pwm_map = [
     # min pwn, max pwm, center pwm, multiplier (reverse)
     (100.0,     900.0,   431.0,   1.0), # front_left_shoulder
-    (100.0,     900.0,   209.0,   1.0), # front_left_leg
-    (100.0,     900.0,   398.0,   1.0), # front_left_foot
+    (100.0,     900.0,   208.0,   1.0), # front_left_leg
+    (100.0,     900.0,   397.0,   1.0), # front_left_foot
     (100.0,     900.0,   323.0,   1.0), # front_right_shoulder
     (100.0,     900.0,   403.0,  -1.0), # front_right_leg
-    (100.0,     900.0,   214.0,  -1.0), # front_right_foot
+    (100.0,     900.0,   225.0,  -1.0), # front_right_foot
     (100.0,     900.0,   315.0,  -1.0), # rear_left_shoulder
-    (100.0,     900.0,   235.0,   1.0), # rear_left_leg
-    (100.0,     900.0,   400.0,   1.0), # rear_left_foot
+    (100.0,     900.0,   244.0,   1.0), # rear_left_leg
+    (100.0,     900.0,   399.0,   1.0), # rear_left_foot
     (100.0,     900.0,   309.0,  -1.0), # rear_right_shoulder
     (100.0,     900.0,   405.0,  -1.0), # rear_right_leg
-    (100.0,     900.0,   222.0,  -1.0), # rear_right_foot
+    (100.0,     900.0,   235.0,  -1.0), # rear_right_foot
 ]
 
 

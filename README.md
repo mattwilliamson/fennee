@@ -39,8 +39,6 @@
 - Ubuntu 20.04 _Ubuntu 18.04 (ROS Melodic) should work as well_
 - [ROS 1 Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
 
-_Ubuntu 18.04 (ROS Melodic) should work as well_
-
 ## Building
 
 ```sh
@@ -111,8 +109,14 @@ roslaunch fennee_config bringup.launch hardware_connected:=true publish_joint_co
 roslaunch champ_bringup joints_gui.launch
 ```
 
+```
+rostopic echo servo_duty_cycles
+```
+
+Put duty cycles into `fennee_control/scripts/servo_interface.py` `pwm_map`.
+
 fennee_config/config/gait/gait.yaml has `com_x_translation` to shift the center of balance from the front to the back. 
-`0.01` increments (in meters) have been useful for me.
+For example `-0.01` if the robot is leaning backwards a bit, keeping it from walking.
 
 ### Watching logs
 
