@@ -29,7 +29,6 @@
 
 - [SpotMicro prints without supports](https://www.thingiverse.com/thing:4559827)
 - [Reinforced shoulders](https://www.thingiverse.com/thing:4937631)
-- [Silicone Molds for Feet](https://github.com/mattwilliamson/SpotMicroESP32/tree/master/parts/SpotMicroESP32_parts_v1_0_0/mods/silicone_foot_mould/Moule_part1.stl)
 - [Assembly Guide](https://github.com/mattwilliamson/SpotMicroESP32/tree/master/assembly) *Needs some updates*
 
 # Software
@@ -38,6 +37,7 @@
 - [PlatformIO](https://platformio.org/)
 - Ubuntu 20.04 _Ubuntu 18.04 (ROS Melodic) should work as well_
 - [ROS 1 Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
+- [Jetson Docker Containers](https://github.com/dusty-nv/jetson-containers)
 
 ## Building
 
@@ -136,8 +136,7 @@ https://www.thingiverse.com/thing:4937631
 
 - [ ] Front camera
 - [ ] IMU Publisher
-- [ ] Calibration
-- [ ] Faster baud rate
+- [x] Faster baud rate
 - [ ] Option to connecto to TCP rosserial
 - [ ] Calibration config file
 - [ ] Wiring diagrams
