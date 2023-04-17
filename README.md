@@ -48,7 +48,7 @@ source /opt/ros/noetic/setup.bash
 # CD to your workspace source, e.g. ~/ros_ws and clone the repo
 cd $YOUR_WS/src
 git clone https://github.com/mattwilliamson/fennee.git
-vcs import < fennee/fennee_ros/.fennee.repos --recursive
+vcs import < fennee/fennee_ros/fennee.rosinstall --recursive
 
 # CD to your workspace and build
 cd ..
@@ -82,6 +82,25 @@ With a PS4/DS4 controller:
 | Right Stick | Pitch/Roll           |
 | L1 (hold)   | Holonomic (strafing) |
 | R2          | Sit                  |
+
+### Jetson Nano
+```sh
+ssh user@jetson
+mkdir -p ~/ros_ws/src
+cd ~/ros_ws/src
+
+git clone https://github.com/mattwilliamson/fennee.git
+cd fennee
+
+sudo docker build -t fennee .
+sudo docker run -it --rm --runtime nvidia --network host fennee
+sudo docker run -it --rm --runtime nvidia -v $HOME/ros_ws/src/fennee:/fennee_ws/src/fennee --network host fennee
+
+# Source your build
+source devel/setup.bash
+
+```
+
 
 ### Hardware
 
