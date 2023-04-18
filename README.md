@@ -98,7 +98,7 @@ sudo docker run -it --rm --runtime nvidia -v $HOME/ros_ws/src/fennee:/fennee_ws/
 
 # Source your build
 source devel/setup.bash
-
+roslaunch fennee_config bringup.launch hardware_connected:=true
 ```
 
 
