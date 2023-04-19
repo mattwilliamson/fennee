@@ -38,7 +38,8 @@ source devel/setup.bash
 TODO: Need to specify dependencies correctly
 
 ```sh
-pip3 install adafruit_pca9685 adafruit_blinka
+
+pip3 install -t /home/jetson/ros_ws/devel/lib/python3/dist-packages adafruit-circuitpython-servokit pyyaml
 ```
 
 ### Simulator
