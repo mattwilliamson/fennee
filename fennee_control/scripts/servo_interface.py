@@ -10,20 +10,24 @@ to avoid overflowing the serial buffer to the microcontroller.
 http://wiki.ros.org/rospy/Overview/Time
 """
 
-FREQUENCY = 150  # Hz
-# FREQUENCY = 1  # Hz
+PUBLISH_FREQUENCY = 150  # Hz
 SERVO_STATES_TOPIC = "servo_duty_cycles"
 JOINT_STATES_TOPIC = "joint_states"
 JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
 QUEUE_SIZE = 0
-
+PCA_PWM_FREQUENCY = 50 # Hz for analog servos
 
 import rospy
-import numpy as np
+# import numpy as np
 import math
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 from std_msgs.msg import UInt16MultiArray
+# from board import SCL, SDA
+# import busio
+# from Adafruit_PCA9685 import PCA9685
+from adafruit_servokit import ServoKit
+
 
 DEGREES_PER_PWM = 180.0 / 285.0 # 285 pwm / 180 degrees = 0.6315789474
 RADIANS_PER_PWM = math.pi / 285.0 # 0.01102313212
@@ -134,6 +138,9 @@ def joint_states_to_pwms(angles):
 
 class ServoInterface:
     def __init__(self):
+        # PCA9685 I2C PWM controller
+        self.pwm = ServoKit(channels=16)
+        # self.pwm.servo[0].angle = 180
         self.joint_positions = None
         self.servo_states_topic = rospy.Publisher(
             SERVO_STATES_TOPIC, UInt16MultiArray, queue_size=QUEUE_SIZE
@@ -149,7 +156,7 @@ class ServoInterface:
             self.handle_joint_commands,
             queue_size=1,
         )
-        rospy.Timer(rospy.Duration(1.0 / FREQUENCY), self.publish_positions)
+        rospy.Timer(rospy.Duration(1.0 / PUBLISH_FREQUENCY), self.publish_positions)
 
     def handle_joint_commands(self, data: JointTrajectory):
         self.joint_positions = data

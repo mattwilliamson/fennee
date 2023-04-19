@@ -29,3 +29,25 @@
 - [Reinforced shoulders](https://www.thingiverse.com/thing:4937631)
 - [Assembly Guide](https://github.com/mattwilliamson/SpotMicroESP32/tree/master/assembly) *Needs some updates*
 
+
+
+---
+
+PCA9685 Connection
+ - Connect VCC Pin of PCA9685 to 3.3 Volt Pin of Jetson Nano (Pin 1 upper outside)
+ - Connect GND Pin of PCA9685 to Jetson Nano GND (Row 3, inside pin)
+ - Connect SDA Pin of PCA9685 to Jetson Nano Pin 3 (Row 2, outside pin)
+ - Connect SCL Pin of PCA9685 to Jetson Nano Pin 5 (Row 3, outside pin)
+
+```
+jetson@fennee:~/ros_ws$ sudo i2cdetect -y -r 1
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: 40 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: 70 -- -- -- -- -- -- --             
+```

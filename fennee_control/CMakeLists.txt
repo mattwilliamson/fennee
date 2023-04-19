@@ -3,7 +3,6 @@ project(fennee_control)
 
 find_package(catkin REQUIRED COMPONENTS 
   rospy
-  # rosserial_arduino
   sensor_msgs
 )
 

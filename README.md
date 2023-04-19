@@ -35,6 +35,12 @@ source devel/setup.bash
 
 ## Running
 
+TODO: Need to specify dependencies correctly
+
+```sh
+pip3 install adafruit_pca9685 adafruit_blinka
+```
+
 ### Simulator
 
 ```sh
