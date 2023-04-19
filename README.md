@@ -39,7 +39,7 @@ TODO: Need to specify dependencies correctly
 
 ```sh
 
-pip3 install -t /home/jetson/ros_ws/devel/lib/python3/dist-packages adafruit-circuitpython-servokit pyyaml
+sudo pip3 install -t /opt/ros/noetic/lib/python3/dist-packages adafruit_blinka adafruit-circuitpython-servokit pyyaml
 ```
 
 ### Simulator

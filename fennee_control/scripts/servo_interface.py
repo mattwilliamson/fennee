@@ -77,19 +77,33 @@ JOINT_NAMES = [
 # Manual calibration for now
 pwm_map = [
     # center pwm, multiplier (reverse)
-    (90,  1.0), # front_left_shoulder
-    (90,   1.0), # front_left_leg
-    (90,  1.0), # front_left_foot
-    (90,   1.0), # front_right_shoulder
-    (90,  -1.0), # front_right_leg
-    (90,  -1.0), # front_right_foot
-    (90,  -1.0), # rear_left_shoulder
+    
+    (250,  1.0), # front_left_shoulder
+    (45,   1.0), # front_left_leg
+    (230,  1.0), # front_left_foot
+    (160,   1.0), # front_right_shoulder
+    (240,  -1.0), # front_right_leg
+    (60,  -1.0), # front_right_foot
+    (150,  -1.0), # rear_left_shoulder
     (90,   1.0), # rear_left_leg
-    (90,  1.0), # rear_left_foot
-    (90,  -1.0), # rear_right_shoulder
-    (90, -1.0), # rear_right_leg
-    (90,  -1.0), # rear_right_foot
+    (230,  1.0), # rear_left_foot
+    (120,  -1.0), # rear_right_shoulder
+    (220, -1.0), # rear_right_leg
+    (70,  -1.0), # rear_right_foot
 ]
+
+# 0 230 # front_left_foot
+# 1 45 # front_left_leg
+# 2 250 # front_left_shoulder
+# 3 60 # front_right_foot
+# 4 240 # front_right_leg
+# 5 160 # front_right_shoulder
+# 6 230 # rear_left_foot
+# 7 90 # rear_left_leg
+# 8 150 # rear_left_shoulder
+# 9 70 # rear_right_foot
+# 10 220 # rear_right_leg
+# 11 120 # rear_right_shoulder
 
 
 def radians_to_pwm(angle, pwm_map_row):
@@ -132,7 +146,7 @@ class ServoInterface:
         rospy.Timer(rospy.Duration(1.0 / PUBLISH_FREQUENCY), self.publish_positions)
 
     def handle_joint_commands(self, data: JointTrajectory):
-        rospy.loginfo("handle_joint_commands")
+        # rospy.loginfo("handle_joint_commands")
         self.joint_positions = data
 
 
@@ -147,7 +161,7 @@ class ServoInterface:
         self.publish_joint_state(names, cmd)
 
     def publish_servo_positions(self, names, cmd: JointTrajectoryPoint):
-        rospy.loginfo("publish_servo_positions")
+        # rospy.loginfo("publish_servo_positions")
         # TODO: Transform joint positions to servo positions to pwm values
         angles = cmd.positions
         # print(self.get_joint_names())
