@@ -48,7 +48,6 @@
 
         <include file="$(find fennee_config)/launch/position_controllers.launch"/>
 
-        <include file="$(find fennee_control)/launch/robot_interface.launch"/>
         <include file="$(find fennee_control)/launch/servo_interface.launch"/>
     </group>
 

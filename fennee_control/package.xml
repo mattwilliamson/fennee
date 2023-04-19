@@ -11,8 +11,13 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <!-- <exec_depend>cv_bridge</exec_depend> -->
-  <exec_depend>numpy</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>trajectory_msgs</exec_depend>
+
+  <!-- https://github.com/ros/rosdistro/blob/master/rosdep/python.yaml -->
+  <exec_depend>adafruit-pca9685-pip</exec_depend>
+  <!-- adafruit_blinka -->
+
+  
 </package>

@@ -1,6 +1,6 @@
 # fennee_description
 
-A minimal and revamped version of [fenneeAI](https://fenneeai.readthedocs.io/en/latest/) description file pulled from its [Gitlab](https://gitlab.com/custom_robots/fenneeai/simulation) repository.
+A minimal and revamped version of [SpotmicroAI](https://spotmicroai.readthedocs.io/en/latest/) description file pulled from its [Gitlab](https://gitlab.com/custom_robots/spotmicroai/simulation) repository.
 
 The meshes' path have been modified so the models can be located using its package name.
 
