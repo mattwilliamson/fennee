@@ -16,7 +16,8 @@ JOINT_STATES_TOPIC = "joint_states"
 JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
 QUEUE_SIZE = 0
 PCA_PWM_FREQUENCY = 50 # Hz for analog servos
-MAX_ANGLE = 270 # degrees
+# MAX_ANGLE = 270 # degrees
+MAX_ANGLE = 180 # degrees
 
 import rospy
 # import numpy as np
@@ -94,18 +95,18 @@ CHANNEL_MAP = [
 PWM_MAP = [
     # center pwm, multiplier (reverse)
     
-    (255,  1.0), # front_left_shoulder
-    (55,   1.0), # front_left_leg
-    (230,  1.0), # front_left_foot
-    (155,   1.0), # front_right_shoulder
-    (230,  -1.0), # front_right_leg
-    (60,  -1.0), # front_right_foot
-    (150,  -1.0), # rear_left_shoulder
-    (85,   1.0), # rear_left_leg
-    (230,  1.0), # rear_left_foot
-    (135,  -1.0), # rear_right_shoulder
-    (230, -1.0), # rear_right_leg
-    (70,  -1.0), # rear_right_foot
+    (168,  1.0),    # 0 front_left_shoulder
+    (35,   1.0),    # 1 front_left_leg
+    (152,  1.0),    # 2 front_left_foot
+    (107,   1.0),   # 3 front_right_shoulder
+    (155,  -1.0),   # 4 front_right_leg
+    (40,  -1.0),    # 5 front_right_foot
+    (102,  -1.0),   # 6 rear_left_shoulder
+    (53,   1.0),    # 7 rear_left_leg
+    (155,  1.0),    # 8 rear_left_foot
+    (93,  -1.0),    # 9 rear_right_shoulder
+    (155, -1.0),    # 10 rear_right_leg
+    (45,  -1.0),    # 11 rear_right_foot
 ]
 
 # 0 230 # front_left_foot
@@ -144,8 +145,8 @@ class ServoInterface:
     def __init__(self):
         # PCA9685 I2C PWM controller
         self.pwm = ServoKit(channels=16)
-        for i in range(0, 12):
-            self.pwm.servo[i].actuation_range = MAX_ANGLE
+        # for i in range(0, 12):
+        #     self.pwm.servo[i].actuation_range = MAX_ANGLE
         self.joint_positions = None
         self.servo_states_topic = rospy.Publisher(
             SERVO_STATES_TOPIC, UInt16MultiArray, queue_size=QUEUE_SIZE
