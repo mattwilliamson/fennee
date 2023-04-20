@@ -10,7 +10,7 @@ to avoid overflowing the serial buffer to the microcontroller.
 http://wiki.ros.org/rospy/Overview/Time
 """
 
-PUBLISH_FREQUENCY = 150  # Hz
+PUBLISH_FREQUENCY = 200  # Hz
 SERVO_STATES_TOPIC = "servo_duty_cycles"
 JOINT_STATES_TOPIC = "joint_states"
 JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
@@ -73,22 +73,38 @@ JOINT_NAMES = [
 #   pwm |   113.0,        256.0,       400.0
 # angle |   -2.576207,    -1.92721,    0.000000
 
+# Map the control list to PWM channels
+CHANNEL_MAP = [
+    2,  # front_left_shoulder
+    1,  # front_left_leg
+    0,  # front_left_foot
+    5,  # front_right_shoulder
+    4,  # front_right_leg
+    3,  # front_right_foot
+    8,  # rear_left_shoulder
+    7,  # rear_left_leg
+    6,  # rear_left_foot
+    11, # rear_right_shoulder
+    10, # rear_right_leg
+    9,  # rear_right_foot
+]
+
 
 # Manual calibration for now
-pwm_map = [
+PWM_MAP = [
     # center pwm, multiplier (reverse)
     
-    (250,  1.0), # front_left_shoulder
-    (45,   1.0), # front_left_leg
+    (255,  1.0), # front_left_shoulder
+    (55,   1.0), # front_left_leg
     (230,  1.0), # front_left_foot
-    (160,   1.0), # front_right_shoulder
-    (240,  -1.0), # front_right_leg
+    (155,   1.0), # front_right_shoulder
+    (230,  -1.0), # front_right_leg
     (60,  -1.0), # front_right_foot
     (150,  -1.0), # rear_left_shoulder
-    (90,   1.0), # rear_left_leg
+    (85,   1.0), # rear_left_leg
     (230,  1.0), # rear_left_foot
-    (120,  -1.0), # rear_right_shoulder
-    (220, -1.0), # rear_right_leg
+    (135,  -1.0), # rear_right_shoulder
+    (230, -1.0), # rear_right_leg
     (70,  -1.0), # rear_right_foot
 ]
 
@@ -107,6 +123,7 @@ pwm_map = [
 
 
 def radians_to_pwm(angle, pwm_map_row):
+    # TODO: Subtract from 360 if negative
     center_pwm, multiplier = pwm_map_row
     pwm = (math.degrees(angle) * multiplier) + center_pwm
     if pwm < 0:
@@ -118,8 +135,9 @@ def radians_to_pwm(angle, pwm_map_row):
 def joint_states_to_pwms(angles):
     """Converts joint angles to pwm values"""
     # TODO: Can probably do a batch calculation for all servos with numpy
-    angles = [radians_to_pwm(a, pwm_map[i]) for i, a in enumerate(angles)]
-    return angles
+    pwms = [radians_to_pwm(a, PWM_MAP[i]) for i, a in enumerate(angles)]
+    remapped = [pwms[i] for i in CHANNEL_MAP]
+    return remapped
 
 
 class ServoInterface:
