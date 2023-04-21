@@ -10,13 +10,14 @@ to avoid overflowing the serial buffer to the microcontroller.
 http://wiki.ros.org/rospy/Overview/Time
 """
 
-PUBLISH_FREQUENCY = 150  # Hz
+PUBLISH_FREQUENCY = 200  # Hz
 SERVO_STATES_TOPIC = "servo_duty_cycles"
 JOINT_STATES_TOPIC = "joint_states"
 JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
 QUEUE_SIZE = 0
 PCA_PWM_FREQUENCY = 50 # Hz for analog servos
-MAX_ANGLE = 270 # degrees
+# MAX_ANGLE = 270 # degrees
+MAX_ANGLE = 180 # degrees
 
 import rospy
 # import numpy as np
@@ -73,26 +74,57 @@ JOINT_NAMES = [
 #   pwm |   113.0,        256.0,       400.0
 # angle |   -2.576207,    -1.92721,    0.000000
 
-
-# Manual calibration for now
-pwm_map = [
-    # center pwm, multiplier (reverse)
-    (90,  1.0), # front_left_shoulder
-    (90,   1.0), # front_left_leg
-    (90,  1.0), # front_left_foot
-    (90,   1.0), # front_right_shoulder
-    (90,  -1.0), # front_right_leg
-    (90,  -1.0), # front_right_foot
-    (90,  -1.0), # rear_left_shoulder
-    (90,   1.0), # rear_left_leg
-    (90,  1.0), # rear_left_foot
-    (90,  -1.0), # rear_right_shoulder
-    (90, -1.0), # rear_right_leg
-    (90,  -1.0), # rear_right_foot
+# Map the control list to PWM channels
+CHANNEL_MAP = [
+    2,  # front_left_shoulder
+    1,  # front_left_leg
+    0,  # front_left_foot
+    5,  # front_right_shoulder
+    4,  # front_right_leg
+    3,  # front_right_foot
+    8,  # rear_left_shoulder
+    7,  # rear_left_leg
+    6,  # rear_left_foot
+    11, # rear_right_shoulder
+    10, # rear_right_leg
+    9,  # rear_right_foot
 ]
 
 
+# Manual calibration for now
+PWM_MAP = [
+    # center pwm, multiplier (reverse)
+    
+    (168,  1.0),    # 0 front_left_shoulder
+    (35,   1.0),    # 1 front_left_leg
+    (152,  1.0),    # 2 front_left_foot
+    (107,   1.0),   # 3 front_right_shoulder
+    (155,  -1.0),   # 4 front_right_leg
+    (40,  -1.0),    # 5 front_right_foot
+    (102,  -1.0),   # 6 rear_left_shoulder
+    (53,   1.0),    # 7 rear_left_leg
+    (155,  1.0),    # 8 rear_left_foot
+    (93,  -1.0),    # 9 rear_right_shoulder
+    (155, -1.0),    # 10 rear_right_leg
+    (45,  -1.0),    # 11 rear_right_foot
+]
+
+# 0 230 # front_left_foot
+# 1 45 # front_left_leg
+# 2 250 # front_left_shoulder
+# 3 60 # front_right_foot
+# 4 240 # front_right_leg
+# 5 160 # front_right_shoulder
+# 6 230 # rear_left_foot
+# 7 90 # rear_left_leg
+# 8 150 # rear_left_shoulder
+# 9 70 # rear_right_foot
+# 10 220 # rear_right_leg
+# 11 120 # rear_right_shoulder
+
+
 def radians_to_pwm(angle, pwm_map_row):
+    # TODO: Subtract from 360 if negative
     center_pwm, multiplier = pwm_map_row
     pwm = (math.degrees(angle) * multiplier) + center_pwm
     if pwm < 0:
@@ -104,16 +136,17 @@ def radians_to_pwm(angle, pwm_map_row):
 def joint_states_to_pwms(angles):
     """Converts joint angles to pwm values"""
     # TODO: Can probably do a batch calculation for all servos with numpy
-    angles = [radians_to_pwm(a, pwm_map[i]) for i, a in enumerate(angles)]
-    return angles
+    pwms = [radians_to_pwm(a, PWM_MAP[i]) for i, a in enumerate(angles)]
+    remapped = [pwms[i] for i in CHANNEL_MAP]
+    return remapped
 
 
 class ServoInterface:
     def __init__(self):
         # PCA9685 I2C PWM controller
         self.pwm = ServoKit(channels=16)
-        for i in range(0, 12):
-            self.pwm.servo[i].actuation_range = MAX_ANGLE
+        # for i in range(0, 12):
+        #     self.pwm.servo[i].actuation_range = MAX_ANGLE
         self.joint_positions = None
         self.servo_states_topic = rospy.Publisher(
             SERVO_STATES_TOPIC, UInt16MultiArray, queue_size=QUEUE_SIZE
@@ -132,7 +165,7 @@ class ServoInterface:
         rospy.Timer(rospy.Duration(1.0 / PUBLISH_FREQUENCY), self.publish_positions)
 
     def handle_joint_commands(self, data: JointTrajectory):
-        rospy.loginfo("handle_joint_commands")
+        # rospy.loginfo("handle_joint_commands")
         self.joint_positions = data
 
 
@@ -147,7 +180,7 @@ class ServoInterface:
         self.publish_joint_state(names, cmd)
 
     def publish_servo_positions(self, names, cmd: JointTrajectoryPoint):
-        rospy.loginfo("publish_servo_positions")
+        # rospy.loginfo("publish_servo_positions")
         # TODO: Transform joint positions to servo positions to pwm values
         angles = cmd.positions
         # print(self.get_joint_names())
