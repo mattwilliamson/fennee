@@ -1,0 +1,1 @@
+SpotMicroESP32 with reinforced shoulders by robjk on Thingiverse: https://www.thingiverse.com/thing:4937631
