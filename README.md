@@ -133,13 +133,19 @@ https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [x] Custom hip for metal servo arm
+- [ ] Custom mounting board for electronics
+- [ ] Custom nose for camera and LED ring
+- [x] Lengthen body
+- [ ] New cover with lidar mount and fan
 - [ ] Front camera
 - [ ] IMU Publisher
 - [x] Faster baud rate
-- [ ] Option to connecto to TCP rosserial
 - [ ] Calibration config file
 - [ ] Wiring diagrams
 - [ ] 3d print instructions/list
 - [ ] Show loading screen while robot is waiting for ROS
 - [ ] LED ring
 - [ ] LIDAR
+- [ ] Relay for servos
+

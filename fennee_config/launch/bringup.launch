@@ -18,6 +18,7 @@
     <arg name="hardware_connected"     default="false" /> <!-- Flag useful to launch hardware connected launch files. This auto disables publishing joint_states. -->
     <arg name="joy"                    default="false"/>  <!-- Set to true to run teleop with joystick. -->
     <arg name="dev"                    default="/dev/input/js0"/> <!-- Joystick device-->
+    <arg name="servo_connected"        default="true"/>  <!-- Set to true to send PWM signals. -->
 
     <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
     <arg unless="$(eval arg('robot_name') == '/')" name="frame_prefix" value="$(arg robot_name)/" />
@@ -48,8 +49,12 @@
 
         <include file="$(find fennee_config)/launch/position_controllers.launch"/>
 
-        <include file="$(find fennee_control)/launch/servo_interface.launch"/>
+        <group if="$(arg servo_connected)">
+            <include file="$(find fennee_control)/launch/servo_interface.launch" />
+        </group>
     </group>
+
+
 
     <group if="$(arg joy)">
         <node if="$(arg joy)" name="joy" pkg="joy" type="joy_node" required="true">

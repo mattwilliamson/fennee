@@ -1,0 +1,3 @@
+[submodule "models/michaelkubina_SpotMicroESP32"]
+	path = models/michaelkubina_SpotMicroESP32
+	url = https://github.com/michaelkubina/SpotMicroESP32
