@@ -133,6 +133,12 @@ https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [ ] LED Ring sticking out under lidar?
+- [ ] Separate mount for IMU
+- [ ] Supports around holes for covers
+- [ ] Custom top and bottom cover, speakers, mic, fan
+- [x] Lengthen chassis for more electronics room
+- [ ] Removable electronicts mount
 - [x] Custom hip for metal servo arm
 - [ ] Custom mounting board for electronics
 - [ ] Custom nose for camera and LED ring
