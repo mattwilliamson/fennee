@@ -133,6 +133,7 @@ https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [ ] Rear cover hole for voltmeter
 - [ ] LED Ring sticking out under lidar?
 - [ ] Separate mount for IMU
 - [ ] Supports around holes for covers
@@ -154,4 +155,5 @@ https://www.thingiverse.com/thing:4937631
 - [ ] LED ring
 - [ ] LIDAR
 - [ ] Relay for servos
+- [ ] Some kind of quick release for covers - removing battery is annoying
 
