@@ -75,20 +75,21 @@ JOINT_NAMES = [
 # angle |   -2.576207,    -1.92721,    0.000000
 
 # Map the control list to PWM channels
-CHANNEL_MAP = [
-    2,  # front_left_shoulder
-    1,  # front_left_leg
-    0,  # front_left_foot
-    5,  # front_right_shoulder
-    4,  # front_right_leg
-    3,  # front_right_foot
-    8,  # rear_left_shoulder
-    7,  # rear_left_leg
-    6,  # rear_left_foot
-    11, # rear_right_shoulder
-    10, # rear_right_leg
-    9,  # rear_right_foot
-]
+# No longer needed since the channels match the order of the joints
+# CHANNEL_MAP = [
+#     1,  # front_left_shoulder
+#     1,  # front_left_leg
+#     2,  # front_left_foot
+#     3,  # front_right_shoulder
+#     4,  # front_right_leg
+#     5,  # front_right_foot
+#     6,  # rear_left_shoulder
+#     7,  # rear_left_leg
+#     8,  # rear_left_foot
+#     9, # rear_right_shoulder
+#     10, # rear_right_leg
+#     11,  # rear_right_foot
+# ]
 
 
 # Manual calibration for now
@@ -137,8 +138,8 @@ def joint_states_to_pwms(angles):
     """Converts joint angles to pwm values"""
     # TODO: Can probably do a batch calculation for all servos with numpy
     pwms = [radians_to_pwm(a, PWM_MAP[i]) for i, a in enumerate(angles)]
-    remapped = [pwms[i] for i in CHANNEL_MAP]
-    return remapped
+    # remapped = [pwms[i] for i in CHANNEL_MAP] # No longer needed since the channels match
+    return pwms
 
 
 class ServoInterface:
