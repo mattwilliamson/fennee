@@ -134,6 +134,7 @@ https://www.thingiverse.com/thing:4937631
 ## TODO
 
 - [ ] Rear cover hole for voltmeter
+- [ ] Oak D Lite Camera mount
 - [ ] LED Ring sticking out under lidar?
 - [ ] Separate mount for IMU
 - [ ] Supports around holes for covers
