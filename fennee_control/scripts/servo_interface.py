@@ -99,13 +99,13 @@ PWM_MAP = [
     (102,  1.0),    # 0 front_left_shoulder
     (35,   1.0),    # 1 front_left_leg
     (152,  1.0),    # 2 front_left_foot
-    (100,   1.0),   # 3 front_right_shoulder
+    (98,   1.0),   # 3 front_right_shoulder
     (155,  -1.0),   # 4 front_right_leg
     (40,  -1.0),    # 5 front_right_foot
-    (90,  -1.0),   # 6 rear_left_shoulder
+    (102,  -1.0),   # 6 rear_left_shoulder
     (53,   1.0),    # 7 rear_left_leg
     (155,  1.0),    # 8 rear_left_foot
-    (90,  -1.0),    # 9 rear_right_shoulder
+    (98,  -1.0),    # 9 rear_right_shoulder
     (155, -1.0),    # 10 rear_right_leg
     (45,  -1.0),    # 11 rear_right_foot
 ]

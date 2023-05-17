@@ -19,6 +19,8 @@ except ImportError:
 
 # from servo_interface import PWM_MAP, JOINT_NAMES, MAX_ANGLE
 
+YAML_FILE = "pwm_map.yaml"
+
 MAX_ANGLE = 180  # degrees
 
 JOINT_NAMES = [
@@ -41,20 +43,20 @@ JOINT_NAMES = [
 ]
 
 
-PWM_MAP = {
-    "front_left_foot": {"angle": 152, "multiplier": 1.0},
-    "front_left_leg": {"angle": 35, "multiplier": 1.0},
-    "front_left_shoulder": {"angle": 102, "multiplier": 1.0},
-    "front_right_foot": {"angle": 40, "multiplier": -1.0},
-    "front_right_leg": {"angle": 155, "multiplier": -1.0},
-    "front_right_shoulder": {"angle": 98, "multiplier": 1.0},
-    "rear_left_foot": {"angle": 155, "multiplier": 1.0},
-    "rear_left_leg": {"angle": 53, "multiplier": 1.0},
-    "rear_left_shoulder": {"angle": 102, "multiplier": -1.0},
-    "rear_right_foot": {"angle": 45, "multiplier": -1.0},
-    "rear_right_leg": {"angle": 155, "multiplier": -1.0},
-    "rear_right_shoulder": {"angle": 98, "multiplier": -1.0},
-}
+# PWM_MAP = {
+#     "front_left_foot": {"angle": 152, "multiplier": 1.0},
+#     "front_left_leg": {"angle": 35, "multiplier": 1.0},
+#     "front_left_shoulder": {"angle": 102, "multiplier": 1.0},
+#     "front_right_foot": {"angle": 40, "multiplier": -1.0},
+#     "front_right_leg": {"angle": 155, "multiplier": -1.0},
+#     "front_right_shoulder": {"angle": 98, "multiplier": 1.0},
+#     "rear_left_foot": {"angle": 155, "multiplier": 1.0},
+#     "rear_left_leg": {"angle": 53, "multiplier": 1.0},
+#     "rear_left_shoulder": {"angle": 102, "multiplier": -1.0},
+#     "rear_right_foot": {"angle": 45, "multiplier": -1.0},
+#     "rear_right_leg": {"angle": 155, "multiplier": -1.0},
+#     "rear_right_shoulder": {"angle": 98, "multiplier": -1.0},
+# }
 
 
 def degrees_to_percent(degrees):
@@ -77,6 +79,7 @@ class ServoCalibration:
         self.pwm = ServoKit(channels=16)
         print("I2C initialized.")
         self.selected = 0
+        self.PWM_MAP = load(open(YAML_FILE), Loader=Loader)
 
     def init_gui(self, stdscr):
         curses.noecho()
@@ -92,7 +95,7 @@ class ServoCalibration:
 
         for i, joint_name in enumerate(JOINT_NAMES):
             row = i + 2
-            joint = PWM_MAP[joint_name]
+            joint = self.PWM_MAP[joint_name]
             angle = joint["angle"]
             multiplier = joint["multiplier"]
             selected = i == self.selected
@@ -127,14 +130,12 @@ class ServoCalibration:
             elif c == curses.KEY_DOWN:
                 self.selected += 1
             elif c == curses.KEY_LEFT:
-                PWM_MAP[joint_name]["angle"] -= 1
+                self.PWM_MAP[joint_name]["angle"] -= 1
             elif c == curses.KEY_RIGHT:
-                PWM_MAP[joint_name]["angle"] += 1
+                self.PWM_MAP[joint_name]["angle"] += 1
             elif c == 115:
                 # s = Save
-                # stdscr.addstr(31, 0, "Key: {}".format(c))
-                dump(PWM_MAP, open("pwm_map.yaml", "w"), Dumper=Dumper)
-                # print(dump(PWM_MAP))
+                dump(self.PWM_MAP, open(YAML_FILE, "w"), Dumper=Dumper)
                 return
             else:
                 # time.sleep(5)
@@ -157,8 +158,6 @@ class ServoCalibration:
 
 
 def main(stdscr):
-    global PWM_MAP
-    PWM_MAP = load(open("pwm_map.yaml"), Loader=Loader)
     # calibrate_servos()
     sc = ServoCalibration()
     sc.init_gui(stdscr)
