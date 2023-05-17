@@ -157,6 +157,7 @@ class ServoCalibration:
 
 
 def main(stdscr):
+    global PWM_MAP
     PWM_MAP = load(open("pwm_map.yaml"), Loader=Loader)
     # calibrate_servos()
     sc = ServoCalibration()
