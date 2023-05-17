@@ -11,6 +11,10 @@ from adafruit_servokit import ServoKit
 import curses
 from curses import wrapper
 from yaml import load, dump
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 
 # from servo_interface import PWM_MAP, JOINT_NAMES, MAX_ANGLE
@@ -103,7 +107,7 @@ class ServoCalibration:
     def draw_menu(self, stdscr):
         stdscr.addstr(15, 0, "UP   / DOWN   to select servo ", curses.A_REVERSE)
         stdscr.addstr(16, 0, "LEFT / RIGHT  to adjust angle ", curses.A_REVERSE)
-        stdscr.addstr(17, 0, "LEFT / RIGHT  to adjust angle ", curses.A_REVERSE)
+        # stdscr.addstr(17, 0, "LEFT / RIGHT  to adjust angle ", curses.A_REVERSE)
 
     def draw_gui(self, stdscr):
         stdscr.clear()
@@ -125,11 +129,11 @@ class ServoCalibration:
             elif c == curses.KEY_LEFT:
                 PWM_MAP[joint_name]["angle"] -= 1
             elif c == curses.KEY_RIGHT:
-                PWM_MAP[joint_name]["angle"] -= 1
+                PWM_MAP[joint_name]["angle"] += 1
             elif c == 115:
                 # s = Save
                 # stdscr.addstr(31, 0, "Key: {}".format(c))
-                dump(PWM_MAP, open("pwm_map.yaml", "w"))
+                dump(PWM_MAP, open("pwm_map.yaml", "w"), Dumper=Dumper)
                 # print(dump(PWM_MAP))
                 return
             else:
@@ -153,6 +157,7 @@ class ServoCalibration:
 
 
 def main(stdscr):
+    PWM_MAP = load(open("pwm_map.yaml"), Loader=Loader)
     # calibrate_servos()
     sc = ServoCalibration()
     sc.init_gui(stdscr)
