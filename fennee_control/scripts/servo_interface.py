@@ -107,7 +107,7 @@ PWM_MAP = [
     (154,  1.0),    # 8 rear_left_foot
     (80,  -1.0),    # 9 rear_right_shoulder
     (157, -1.0),    # 10 rear_right_leg
-    (80,  -1.0),    # 11 rear_right_foot
+    (46,  -1.0),    # 11 rear_right_foot
 ]
 
 # 0 230 # front_left_foot
