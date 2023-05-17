@@ -1,0 +1,36 @@
+front_left_foot:
+  angle: 152
+  multiplier: 1.0
+front_left_leg:
+  angle: 35
+  multiplier: 1.0
+front_left_shoulder:
+  angle: 102
+  multiplier: 1.0
+front_right_foot:
+  angle: 40
+  multiplier: -1.0
+front_right_leg:
+  angle: 155
+  multiplier: -1.0
+front_right_shoulder:
+  angle: 98
+  multiplier: 1.0
+rear_left_foot:
+  angle: 155
+  multiplier: 1.0
+rear_left_leg:
+  angle: 53
+  multiplier: 1.0
+rear_left_shoulder:
+  angle: 102
+  multiplier: -1.0
+rear_right_foot:
+  angle: 45
+  multiplier: -1.0
+rear_right_leg:
+  angle: 155
+  multiplier: -1.0
+rear_right_shoulder:
+  angle: 98
+  multiplier: -1.0
