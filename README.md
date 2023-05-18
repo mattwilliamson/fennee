@@ -133,6 +133,7 @@ https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [ ] Charging connector
 - [ ] Add clips to battery clips for wires
 - [ ] Rear cover hole for voltmeter
 - [ ] Oak D Lite Camera mount
@@ -158,4 +159,7 @@ https://www.thingiverse.com/thing:4937631
 - [ ] LIDAR
 - [ ] Relay for servos
 - [ ] Some kind of quick release for covers - removing battery is annoying
+- [ ] Speakers/mic
+
+
 

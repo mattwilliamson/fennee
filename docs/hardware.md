@@ -2,6 +2,7 @@
 
 ## Parts List
 
+
 - [SpotMicro](https://spotmicroai.readthedocs.io/en/latest/)
 - [NVIDIA Jetson Nano](https://www.amazon.com/NVIDIA-Jetson-Nano-Developer-945-13450-0000-100/dp/B084DSDDLT/ref=sr_1_3?crid=K3EEP2QYGRKR&keywords=NVIDIA+Jetson+Nano&qid=1681300762&s=electronics&sprefix=nvidia+jetson+nano%252Celectronics%252C161&sr=1-3&ufe=app_do%253Aamzn1.fos.f5122f16-c3e8-4386-bf32-63e904010ad0&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=7d3968aff925cd432b2f563af53e1284&camp=1789&creative=9325) for high-level control
 - [SD Card](https://www.amazon.com/dp/B07FCMBLV6?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=d9ee3513e15091796e6be4dad591e27c&camp=1789&creative=9325)
@@ -28,6 +29,14 @@
 - [SpotMicro prints without supports](https://www.thingiverse.com/thing:4559827)
 - [Reinforced shoulders](https://www.thingiverse.com/thing:4937631)
 - [Assembly Guide](https://github.com/mattwilliamson/SpotMicroESP32/tree/master/assembly) *Needs some updates*
+
+
+---
+
+## TODO Documentation
+
+- [ ] Lidar specs 
+- [ ] Oak D Lite - needs right angle cable
 
 
 
