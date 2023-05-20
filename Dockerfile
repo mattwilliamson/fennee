@@ -1,109 +1,71 @@
-# https://github.com/dusty-nv/jetson-containers
-# https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
-# https://github.com/dusty-nv/ros_deep_learning
-
-# https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.ros.noetic
-
-#
-# this dockerfile roughly follows the 'Installing from source' from:
-#   http://wiki.ros.org/noetic/Installation/Source
-#
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.7.1
-FROM ${BASE_IMAGE}
-
-ARG ROS_PKG=ros_base
-ENV ROS_DISTRO=noetic
-ENV ROS_ROOT=/opt/ros/${ROS_DISTRO}
-ENV ROS_PYTHON_VERSION=3
-
+# FROM fennee_base
+ARG ROS_DISTRO=noetic
+FROM ros:${ROS_DISTRO}-ros-base
+# FROM dustynv/ros:${ROS_DISTRO}-pytorch-l4t-r32.7.1
+ARG USE_RVIZ
+ARG BUILD_SEQUENTIAL=1
 ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+   && apt-get -y install --no-install-recommends \
+   software-properties-common \
+   git \
+   libusb-1.0-0-dev \
+   wget \
+   zsh \
+   python3-catkin-tools \
+   python3-pip \
+   libpython3-dev \
+   python3-rosdep \
+   python3-rosinstall-generator \
+   python3-vcstool \
+   build-essential
 
-WORKDIR /workspace
+# RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+# RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 
+# RUN apt-get update && apt-get install -y ros-${ROS_DISTRO}-tf
 
-#
-# add the ROS deb repo to the apt sources list
-#
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        git \
-		cmake \
-		build-essential \
-		curl \
-		wget \
-		gnupg2 \
-		lsb-release \
-		ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=dialog
+RUN sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
-
-
-#
-# install bootstrap dependencies
-#
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        python3-pip \
-        libpython3-dev \
-        python3-rosdep \
-        python3-rosinstall-generator \
-        python3-vcstool \
-        build-essential && \
-    rosdep init && \
-    rosdep update && \
-    pip3 install importlib-metadata
-# && rm -rf /var/lib/apt/lists/*
-
-#
-# download/build the ROS source
-#
-ARG ROS_DEPS="vision_msgs image_transport tf urdf ecl_threads robot_state_publisher robot_localization controller_manager"
-RUN mkdir ros_catkin_ws && \
-    cd ros_catkin_ws && \
-    rosinstall_generator ${ROS_PKG} ${ROS_DEPS} --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
-    mkdir src && \
-    vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
-    apt-get update && \
-    rosdep install --from-paths ./src --ignore-packages-from-source --rosdistro ${ROS_DISTRO} --skip-keys python3-pykdl -y && \
-    python3 ./src/catkin/bin/catkin_make_isolated --install --install-space ${ROS_ROOT} -DCMAKE_BUILD_TYPE=Release && \
-    rm -rf /var/lib/apt/lists/*
-
-
-# -------
-
-ENV WS /fennee_ws
-
-RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
-RUN echo "source $WS/devel/setup.bash" >> ~/.bashrc
-CMD ["bash"]
-
-# # Install dependencies first to cache docker layer
-WORKDIR $WS/src
-
-ADD fennee_ros/fennee.rosinstall fennee/fennee_ros/
-RUN vcs import < fennee/fennee_ros/fennee.rosinstall --recursive
+ENV WS=/ws
 WORKDIR $WS
+RUN mkdir src
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+ENTRYPOINT [ "/ws/entrypoint.sh" ]
+CMD ["zsh"]
 
-ARG ROSDEP_SKIP="python3-pykdl"
-RUN apt-get update && \
-    rosdep install --from-paths src --ignore-src -r --rosdistro ${ROS_DISTRO} --skip-keys ${ROSDEP_SKIP} -y && \
-    rm -rf /var/lib/apt/lists/*
+RUN pip3 install adafruit_blinka adafruit-circuitpython-servokit pyyaml Jetson.GPIO
 
-COPY . src/fennee
+COPY ./fennee/fennee_ros/fennee.rosinstall src/
+RUN cd src && vcs import < fennee.rosinstall --recursive
+RUN rosdep install --from-paths src --ignore-src -r -y
 
-# RUN apt-get update  && \
-#     apt-get install -y ros-${ROS_DISTRO}-gazebo-ros && \
-#     rm -rf /var/lib/apt/lists/*
+# Build multiple times to cache layers
+# RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then cd $WS/ && . /opt/ros/noetic/setup.sh && catkin build -j1 -l1; else cd .$WS/ && . /opt/ros/noetic/setup.sh && catkin build; fi 
+ENV CATKIN_FLAGS "-DCATKIN_BLACKLIST_PACKAGES='champ_gazebo' -j1 -l1"
+RUN mkdir /ws/devel/ && touch /ws/devel/setup.bash
+RUN . /opt/ros/noetic/setup.sh && catkin_make $CATKIN_FLAGS
 
-COPY fennee_ros/CATKIN_IGNORE src/champ/champ/champ_gazebo/
-# RUN rm -rf src/champ/champ/champ_gazebo/
+COPY depthai ./src/
+RUN rosdep install --from-paths src --ignore-src -r -y
+RUN . /opt/ros/noetic/setup.sh && catkin_make $CATKIN_FLAGS
 
-RUN bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && \
-            rosdep install --from-paths src --ignore-src -r -y"
+COPY fennee ./src/
+RUN rosdep install --from-paths src --ignore-src -r -y
+RUN . /opt/ros/noetic/setup.sh && catkin_make $CATKIN_FLAGS
 
-RUN bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && \
-            catkin_make install"
 
-# RUN source devel/setup.bash
+RUN  . devel/setup.sh && rosdep install --from-paths src --ignore-src -y && catkin_make $CATKIN_FLAGS
+
+# RUN cd $WS/ && . /opt/ros/noetic/setup.sh && . devel/setup.sh && catkin build $CATKIN_FLAGS
+RUN if [ "$USE_RVIZ" = "1" ] ; then echo "RVIZ ENABLED" && sudo apt install -y ros-noetic-rviz ros-noetic-rviz-imu-plugin ; else echo "RVIZ NOT ENABLED"; fi
+RUN echo "if [ -f ${WS}/devel/setup.zsh ]; then source ${WS}/devel/setup.zsh; fi" >> $HOME/.zshrc
+RUN echo "if [ -f ${WS}/devel/setup.bash ]; then source ${WS}/devel/setup.bash; fi" >> $HOME/.bashrc
+
+
+
+# # ------
+
+

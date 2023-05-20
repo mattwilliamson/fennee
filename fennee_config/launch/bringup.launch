@@ -52,6 +52,8 @@
         <group if="$(arg servo_connected)">
             <include file="$(find fennee_control)/launch/servo_interface.launch" />
         </group>
+
+        <include file="$(find depthai_filters)/launch/example_det2d_overlay.launch"/>
     </group>
 
 
