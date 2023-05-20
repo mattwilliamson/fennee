@@ -1,0 +1,4 @@
+adafruit_blinka
+adafruit-circuitpython-servokit
+pyyaml
+Jetson.GPIO

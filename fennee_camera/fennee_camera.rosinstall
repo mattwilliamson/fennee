@@ -1,0 +1,4 @@
+- git:
+    local-name: depthai
+    uri: https://github.com/luxonis/depthai-core-release.git
+    version: release/noetic/depthai/2.21.2-1
