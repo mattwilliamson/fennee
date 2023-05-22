@@ -40,8 +40,8 @@ RUN apt-get update && \
 
 # must run build twice for some reason
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-   catkin build || \
-   catkin build
+   catkin build -j1 -l1  || \
+   catkin build -j1 -l1 
 # RUN . /opt/ros/${ROS_DISTRO}/setup.sh && catkin build -j1 -l1 
 
 
@@ -65,8 +65,8 @@ WORKDIR $WS
    
 RUN catkin config --extend ${UNDERLAY_WS}/devel && \
    rosdep install --from-paths src --ignore-src -r -y && \
-   catkin build
-
+   catkin build -j1 -l1 
+ 
 # # RUN if [ "$USE_RVIZ" = "1" ] ; then echo "RVIZ ENABLED" && sudo apt install -y ros-${ROS_DISTRO}-rviz ros-${ROS_DISTRO}-rviz-imu-plugin ; else echo "RVIZ NOT ENABLED"; fi
 
 
