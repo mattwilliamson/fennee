@@ -163,3 +163,15 @@ https://www.thingiverse.com/thing:4937631
 
 
 
+---
+
+# Docker
+
+https://hub.docker.com/_/ros/
+
+ROS uses the ~/.ros/ directory for storing logs, and debugging info
+
+```
+docker run -v "/home/ubuntu/.ros/:/root/.ros/" -it --rm --network=host fennee
+```
+
