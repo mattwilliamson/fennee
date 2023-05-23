@@ -14,4 +14,4 @@ You can view the model by running:
 
 You can modify the Xacro description and see the changes in the UDF file with this command:
 
-    rosrun xacro xacro fenneeai.urdf.xacro > fenneeai.urdf
+    rosrun xacro xacro fennee.urdf.xacro > fennee.urdf

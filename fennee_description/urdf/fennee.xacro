@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fenneeAI">
-   <material name="yellow">
-      <color rgba="0.92 0.83 0.0 1" />
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fennee">
+   <material name="tan">
+      <color rgba="0.63 0.59 0.46 1" />
    </material>
    <material name="black">
       <color rgba="0.1 0.1 0.1 1" />
@@ -10,7 +10,7 @@
       <color rgba="0.6 0.6 0.6 1" />
    </material>
    <!-- Params -->
-   <xacro:property name="body_length" value="0.140" />
+   <xacro:property name="body_length" value="0.165" />
    <xacro:property name="body_width" value="0.110" />
    <xacro:property name="body_height" value="0.070" />
    <xacro:property name="lidar_length" value="0.0985" />
@@ -27,7 +27,8 @@
    <xacro:property name="toe_width" value="0.020" />
    <xacro:property name="shift" value="0.055" />
    <xacro:property name="shiftx" value="0.093" />
-   <xacro:property name="shifty" value="0.0395" />
+   <!-- <xacro:property name="shifty" value="0.0395" /> -->
+   <xacro:property name="shifty" value="0.04285" />
    <!-- Macros -->
    <xacro:macro name="gen_shoulder" params="name left">
       <link name="${name}">
@@ -93,7 +94,7 @@
                </geometry>
                <origin rpy="0 0 3.1416" xyz="0.134 0.149 -0.0095" />
             </xacro:unless>
-            <material name="yellow" />
+            <material name="tan" />
          </visual>
       </link>
       <link name="${name}">
@@ -124,7 +125,7 @@
          </inertial>
       </link>
       <gazebo reference="${name}_cover">
-         <material>Gazebo/ZincYellow</material>
+         <material>Gazebo/Grey</material>
       </gazebo>
    </xacro:macro>
    <xacro:macro name="gen_leg_joint" params="pos shift">
@@ -271,7 +272,7 @@
             <mesh filename="package://fennee_description/meshes/stl/backpart.stl" scale="0.001 0.001 0.001" />
          </geometry>
          <origin rpy="0 0 3.1416" xyz="0.042 0.055 -0.0195" />
-         <material name="yellow" />
+         <material name="tan" />
       </visual>
       <collision>
          <geometry>
@@ -297,7 +298,7 @@
             <mesh filename="package://fennee_description/meshes/stl/frontpart.stl" scale="0.001 0.001 0.001" />
          </geometry>
          <origin rpy="0 0 3.1416" xyz="0.042 0.055 -0.0205" />
-         <material name="yellow" />
+         <material name="tan" />
       </visual>
       <collision>
          <geometry>
