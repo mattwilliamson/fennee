@@ -14,6 +14,8 @@ Check the [Hardware & Parts Details docs](./docs/hardware.md)
 
 First [Install ROS Noetic](./docs/install_ros.md)
 
+**I'd like to switch to ROS2 when CHAMP finishes porting over**
+
 ```sh
 # Source your ROS installation
 source /opt/ros/noetic/setup.bash
@@ -133,6 +135,8 @@ https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [ ] Update URDF with longer body
+- [ ] Package requirements are a mess. pip vs rosdep etc.
 - [ ] Charging connector
 - [ ] Add clips to battery clips for wires
 - [ ] Rear cover hole for voltmeter
@@ -169,9 +173,41 @@ https://www.thingiverse.com/thing:4937631
 
 https://hub.docker.com/_/ros/
 
-ROS uses the ~/.ros/ directory for storing logs, and debugging info
+Building the image
+`BUILD_SEQUENTIAL` is for lower memory systems, but takes longer.
 
+```sh
+sudo docker build --build-arg BUILD_SEQUENTIAL=1 -t fennee .
 ```
+
+ROS uses the ~/.ros/ directory for storing logs, and debugging info
+```sh
 docker run -v "/home/ubuntu/.ros/:/root/.ros/" -it --rm --network=host fennee
 ```
 
+```sh
+sudo docker run --rm -it -e ROS_IP=192.168.50.83 --privileged -v /dev/:/dev/ --network host fennee roslaunch fennee_config bringup.launch hardware_connected:=true
+```
+
+RViz/Gazebo
+```sh
+sudo docker run --rm -it -v /dev/:/dev/ --network host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --privileged depthai_ros roslaunch depthai_filters example_seg_overlay.launch
+```
+
+Camera only
+```sh
+sudo docker run --rm -it -e ROS_IP=192.168.50.83 --privileged -v /dev/:/dev/ --network host fennee roslaunch depthai_filters example_det2d_overlay.launch camera_model:=OAK-D-LITE 
+```
+
+View Camera
+```sh
+ROS_MASTER_URI=http://192.168.50.83:11311
+rqt_image_view
+```
+
+Record Video to output.avi
+```sh
+fennee
+ROS_MASTER_URI=http://127.0.0.1:11311 rosrun image_view video_recorder image:=/mobilenet_publisher/color/image
+vlc output.avi
+```
