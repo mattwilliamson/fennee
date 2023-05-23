@@ -43,7 +43,6 @@ JOINT_NAMES = [
 ]
 
 
-<<<<<<< Updated upstream
 # PWM_MAP = {
 #     "front_left_foot": {"angle": 152, "multiplier": 1.0},
 #     "front_left_leg": {"angle": 35, "multiplier": 1.0},
@@ -58,23 +57,6 @@ JOINT_NAMES = [
 #     "rear_right_leg": {"angle": 155, "multiplier": -1.0},
 #     "rear_right_shoulder": {"angle": 98, "multiplier": -1.0},
 # }
-=======
-# Manual calibration for now
-PWM_MAP = {
-    "front_left_foot": {"angle": 152, "multiplier": 1.0},
-    "front_left_leg": {"angle": 35, "multiplier": 1.0},
-    "front_left_shoulder": {"angle": 102, "multiplier": 1.0},
-    "front_right_foot": {"angle": 40, "multiplier": -1.0},
-    "front_right_leg": {"angle": 155, "multiplier": -1.0},
-    "front_right_shoulder": {"angle": 98, "multiplier": 1.0},
-    "rear_left_foot": {"angle": 155, "multiplier": 1.0},
-    "rear_left_leg": {"angle": 53, "multiplier": 1.0},
-    "rear_left_shoulder": {"angle": 102, "multiplier": -1.0},
-    "rear_right_foot": {"angle": 45, "multiplier": -1.0},
-    "rear_right_leg": {"angle": 155, "multiplier": -1.0},
-    "rear_right_shoulder": {"angle": 98, "multiplier": -1.0},
-}
->>>>>>> Stashed changes
 
 
 def degrees_to_percent(degrees):
@@ -86,27 +68,18 @@ def degrees_to_bars(cols, degrees):
     return "[" + "#" * bar_count + " " * (cols - bar_count) + "]"
 
 
-<<<<<<< Updated upstream
 def normalize_angle(degrees):
     return max(0, min(MAX_ANGLE, degrees))
 
 
-=======
->>>>>>> Stashed changes
 class ServoCalibration:
     def __init__(self):
         super().__init__()
         print("Initilizing I2C...")
-<<<<<<< Updated upstream
         self.pwm = ServoKit(channels=16)
         print("I2C initialized.")
         self.selected = 0
         self.PWM_MAP = load(open(YAML_FILE), Loader=Loader)
-=======
-        # self.pwm = ServoKit(channels=16)
-        print("I2C initialized.")
-        self.selected = 0
->>>>>>> Stashed changes
 
     def init_gui(self, stdscr):
         curses.noecho()
@@ -116,7 +89,6 @@ class ServoCalibration:
     def draw_servos(self, stdscr):
         rows, cols = stdscr.getmaxyx()
 
-<<<<<<< Updated upstream
         stdscr.addstr(
             0, 0, "Servo Joint             Angle".ljust(cols), curses.A_REVERSE
         )
@@ -134,41 +106,11 @@ class ServoCalibration:
             stdscr.addstr(row, 35, degrees_to_bars(cols - 40, angle), color)
             self.pwm.servo[i].angle = normalize_angle(angle)
             
-=======
-        stdscr.addstr(0, 0, "Servo Joint             Angle".ljust(cols), curses.A_REVERSE)
-
-        for i, joint_name in enumerate(JOINT_NAMES):
-            row = i + 2
-            joint = PWM_MAP[joint_name]
-            angle = joint["angle"]
-            multiplier = joint["multiplier"]
-            selected = i == self.selected
-            
-
-            # TODO: Figure out if we can just append to the row instead of calculating the length of the string
-            color = curses.A_REVERSE if selected else curses.A_NORMAL
-            stdscr.addstr(
-                row,
-                0,
-                "{i:<2}: {joint_name:<20} {angle:<10}".format(
-                    i=i, joint_name=joint_name, angle=angle
-                ),
-                color,
-            )
-            # if i == PWM_MAP[self.selected]:
-            # stdscr.addstr(3+k[0], 0, JOINT_NAMES[k[0]], color)
-
-            stdscr.addstr(row, 35, degrees_to_bars(cols - 40, angle), color)
->>>>>>> Stashed changes
 
     def draw_menu(self, stdscr):
         stdscr.addstr(15, 0, "UP   / DOWN   to select servo ", curses.A_REVERSE)
         stdscr.addstr(16, 0, "LEFT / RIGHT  to adjust angle ", curses.A_REVERSE)
-<<<<<<< Updated upstream
         # stdscr.addstr(17, 0, "LEFT / RIGHT  to adjust angle ", curses.A_REVERSE)
-=======
-        stdscr.addstr(17, 0, "LEFT / RIGHT  to adjust angle ", curses.A_REVERSE)
->>>>>>> Stashed changes
 
     def draw_gui(self, stdscr):
         stdscr.clear()
@@ -176,13 +118,8 @@ class ServoCalibration:
             # stdscr.clear()
             self.draw_servos(stdscr)
             self.draw_menu(stdscr)
-<<<<<<< Updated upstream
             stdscr.refresh()
             joint_name = JOINT_NAMES[self.selected]
-=======
-
-            stdscr.refresh()
->>>>>>> Stashed changes
 
             # TODO: Toggle direction
             c = stdscr.getch()
@@ -193,37 +130,17 @@ class ServoCalibration:
             elif c == curses.KEY_DOWN:
                 self.selected += 1
             elif c == curses.KEY_LEFT:
-<<<<<<< Updated upstream
                 self.PWM_MAP[joint_name]["angle"] -= 1
             elif c == curses.KEY_RIGHT:
                 self.PWM_MAP[joint_name]["angle"] += 1
             elif c == 115:
                 # s = Save
                 dump(self.PWM_MAP, open(YAML_FILE, "w"), Dumper=Dumper)
-=======
-                v, d = PWM_MAP[self.selected]
-                PWM_MAP[self.selected] = (v - 1, d)
-            elif c == curses.KEY_RIGHT:
-                v, d = PWM_MAP[self.selected]
-                PWM_MAP[self.selected] = (v + 1, d)
-            elif c == 115:
-                # s = Save
-                # stdscr.addstr(31, 0, "Key: {}".format(c))
-                dump(PWM_MAP, open("pwm_map.yaml", "w"))
-                # print(dump(PWM_MAP))
->>>>>>> Stashed changes
                 return
             else:
                 # time.sleep(5)
                 stdscr.addstr(18, 0, "Key: {}".format(c))
-<<<<<<< Updated upstream
             self.selected = max(0, min(len(JOINT_NAMES) - 1, self.selected))
-=======
-            # if self.selected < 0:
-            #     self.selected = 0
-            # elif self.selected >= len(PWM_MAP):
-            #     self.selected = len(PWM_MAP) - 1
->>>>>>> Stashed changes
 
     def deinit_gui(self, stdscr):
         curses.nocbreak()

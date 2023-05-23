@@ -91,8 +91,6 @@ roslaunch fennee_config bringup.launch hardware_connected:=true
 
 roslaunch champ_teleop teleop.launch joy:=true
 
-rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB0 _baud:=500000
-
 rostopic echo joint_states
 ```
 
@@ -135,6 +133,7 @@ https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [ ] Make calibration launch file and parse yaml for servo_controller
 - [ ] Update URDF with longer body
 - [ ] Package requirements are a mess. pip vs rosdep etc.
 - [ ] Charging connector
