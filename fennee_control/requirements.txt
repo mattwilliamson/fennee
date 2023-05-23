@@ -1,4 +1,5 @@
 adafruit_blinka
 adafruit-circuitpython-servokit
+adafruit-pca9685
 pyyaml
 Jetson.GPIO

@@ -18,6 +18,7 @@
   <!-- https://github.com/ros/rosdistro/blob/master/rosdep/python.yaml -->
   <exec_depend>adafruit-pca9685-pip</exec_depend>
   <!-- adafruit_blinka -->
+  <!-- adafruit-circuitpython-servokit -->
 
   
 </package>

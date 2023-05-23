@@ -4,7 +4,7 @@
 ARG ROS_DISTRO=noetic
 FROM ros:${ROS_DISTRO}-ros-base
 ARG USE_RVIZ
-ARG BUILD_SEQUENTIAL=1
+ARG BUILD_SEQUENTIAL=0
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
    && apt-get -y install --no-install-recommends \
@@ -18,8 +18,6 @@ RUN apt-get update \
       python3-vcstool \
       clang-format-10 && \
    rm -rf /var/lib/apt/lists/*
-
-# RUN apt-get update && apt-get install -y ros-${ROS_DISTRO}-tf
 
 ENV DEBIAN_FRONTEND=dialog
 
@@ -39,12 +37,13 @@ RUN apt-get update && \
    rm -rf /var/lib/apt/lists/*
 
 # must run build twice for some reason
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-   catkin build -j1 -l1  || \
-   catkin build -j1 -l1 
-# RUN . /opt/ros/${ROS_DISTRO}/setup.sh && catkin build -j1 -l1 
-
-
+RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then \
+      . /opt/ros/${ROS_DISTRO}/setup.sh && \
+      catkin build -j1 -l1 || catkin build -j1 -l1; \
+   else \
+      . /opt/ros/${ROS_DISTRO}/setup.sh && \
+      catkin build || catkin build; \
+   fi 
 
 # Fennee
 ENV WS=/ws
@@ -66,6 +65,14 @@ WORKDIR $WS
 RUN catkin config --extend ${UNDERLAY_WS}/devel && \
    rosdep install --from-paths src --ignore-src -r -y && \
    catkin build -j1 -l1 
+
+RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then \
+      . ${WS}/devel/setup.sh && \
+      catkin build -j1 -l1; \
+   else \
+      . ${WS}/devel/setup.sh && \
+      catkin build; \
+   fi 
  
 # # RUN if [ "$USE_RVIZ" = "1" ] ; then echo "RVIZ ENABLED" && sudo apt install -y ros-${ROS_DISTRO}-rviz ros-${ROS_DISTRO}-rviz-imu-plugin ; else echo "RVIZ NOT ENABLED"; fi
 

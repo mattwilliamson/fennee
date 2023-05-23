@@ -53,7 +53,7 @@
             <include file="$(find fennee_control)/launch/servo_interface.launch" />
         </group>
 
-        <include file="$(find depthai_filters)/launch/example_det2d_overlay.launch"/>
+        <include file="$(find depthai_examples)/launch/mobile_publisher.launch"/>
     </group>
 
 
