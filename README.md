@@ -195,7 +195,7 @@ sudo docker run --rm -it -v /dev/:/dev/ --network host -e DISPLAY -v /tmp/.X11-u
 
 Camera only
 ```sh
-sudo docker run --rm -it -e ROS_IP=192.168.50.83 --privileged -v /dev/:/dev/ --network host fennee roslaunch depthai_filters example_det2d_overlay.launch camera_model:=OAK-D-LITE 
+sudo docker run --rm -it -e ROS_IP=192.168.50.83 --privileged -v /dev/:/dev/ --network host fennee roslaunch depthai_filters example_det2d_overlay.launch camera_model:=OAK-D
 ```
 
 View Camera
