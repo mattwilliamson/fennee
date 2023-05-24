@@ -198,10 +198,17 @@ RViz/Gazebo
 sudo docker run --rm -it -v /dev/:/dev/ --network host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --privileged depthai_ros roslaunch depthai_filters example_seg_overlay.launch
 ```
 
-Camera only
+Camera publisher with overlay for object detection
 ```sh
-sudo docker run --rm -it -e ROS_IP=192.168.50.83 --privileged -v /dev/:/dev/ --network host fennee roslaunch depthai_filters example_det2d_overlay.launch camera_model:=OAK-D
+sudo docker run --rm -it -e ROS_IP=192.168.50.83 --privileged -v /dev/:/dev/ --network host fennee roslaunch depthai_filters example_det2d_overlay.launch camera_model:=OAK-D-LITE
 ```
+
+Camera publisher with stereo, RGB and IMU
+```sh
+sudo docker run --rm -it -e ROS_IP=192.168.50.83 --privileged -v /dev/:/dev/ --network host fennee roslaunch depthai_examples stereo_inertial_node.launch enableRviz:=false
+```
+
+
 
 View Camera
 ```sh
