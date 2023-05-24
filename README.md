@@ -1,5 +1,10 @@
 # Fennee Quadruped Robot
 
+**F**oundation for **E**xperimental **N**eural **N**etwork **E**ndeavors
+
+---
+
+# Hardware
 Check the [Hardware & Parts Details docs](./docs/hardware.md)
 
 # Software
@@ -10,7 +15,7 @@ Check the [Hardware & Parts Details docs](./docs/hardware.md)
 - [Adafruit CircuitPython libraries](https://docs.circuitpython.org/projects/bundle/en/latest/drivers.html)
 
 
-## Install Fenne Packages
+## Install Fennee Packages
 
 First [Install ROS Noetic](./docs/install_ros.md)
 
