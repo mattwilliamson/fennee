@@ -19,6 +19,7 @@
     <arg name="joy"                    default="false"/>  <!-- Set to true to run teleop with joystick. -->
     <arg name="dev"                    default="/dev/input/js0"/> <!-- Joystick device-->
     <arg name="servo_connected"        default="true"/>  <!-- Set to true to send PWM signals. -->
+    <arg name="camera_model"           default="OAK-D-LITE"/>  <!-- Set to true to send PWM signals. -->
 
     <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
     <arg unless="$(eval arg('robot_name') == '/')" name="frame_prefix" value="$(arg robot_name)/" />
@@ -53,7 +54,6 @@
             <include file="$(find fennee_control)/launch/servo_interface.launch" />
         </group>
 
-        <!-- <include file="$(find depthai_filters)/launch/example_det2d_overlay.launch"/> -->
     </group>
     
 
@@ -72,19 +72,24 @@
         
     </group>
 
-    <!-- <group if="$(arg camera_connected)">
+    <!-- <group if="$(arg camera_connected)"> -->
         <group if="$(arg hardware_connected)">
-            <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser"
-                args="0 0 0 0 0 0 $(arg frame_prefix)base_link $(arg frame_prefix)laser" />
-            <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_imu"
-                args="0 0 0 0 0 0 $(arg frame_prefix)base_link $(arg frame_prefix)imu_link" />
+            <include file="$(find fennee_camera)/launch/stereo_inertial_node.launch">
+            <!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
+                <arg name="enableRviz"              value="$(arg rviz)"/>
+                <arg name="nnName"                  value="yolov4_tiny_coco_416x416_openvino_2021.4_6shave_bgr.blob"/>
+                <arg name="camera_model"            value="$(arg camera_model)"/>
+                <arg name="monoResolution"          value="480p"/>
+                <arg name="previewWidth"            value="416"/>
+                <arg name="previewHeight"           value="416"/>
+                <arg name="rgbResolution"           value="1080p"/>
+                <arg name="confidence"              value="200" />
+                <arg name="stereo_fps"              value="15" />
+                <arg name="enableMarkerPublish"     value="true" />
+                <arg name="imuMode"                 value="0"  />   <!-- 0 -> COPY, 1 -> LINEAR_INTERPOLATE_GYRO, 2 -> LINEAR_INTERPOLATE_ACCEL -->
+            </include>
 
-            <include file="$(find fennee_config)/launch/position_controllers.launch" />
-
-            <group if="$(arg servo_connected)">
-                <include file="$(find fennee_control)/launch/servo_interface.launch" />
-            </group>
 
         </group>
-    </group> -->
+    <!-- </group> -->
 </launch>
