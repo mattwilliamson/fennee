@@ -8,16 +8,7 @@
     <arg name="camera_model"         default="OAK-D"            /> <!-- 'zed' or 'zedm' -->
     <arg name="tf_prefix"            default=""              />
     <arg name="mode"                 default="depth"            />
-    <arg name="base_frame"           default="oak-d_frame"      />
-    <arg name="parent_frame"         default="oak-d-base-frame" /> 
     <arg name="imuMode"              default="1"                />   <!-- 0 -> COPY, 1 -> LINEAR_INTERPOLATE_GYRO, 2 -> LINEAR_INTERPOLATE_ACCEL -->
-
-    <arg name="cam_pos_x"             default="0.0" /> <!-- Position respect to base frame (i.e. "base_link) -->
-    <arg name="cam_pos_y"             default="0.0" /> <!-- Position respect to base frame (i.e. "base_link) -->
-    <arg name="cam_pos_z"             default="0.0" /> <!-- Position respect to base frame (i.e. "base_link) -->
-    <arg name="cam_roll"              default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
-    <arg name="cam_pitch"             default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
-    <arg name="cam_yaw"               default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
 
     <arg name="lrcheck"               default="true" /> 
     <arg name="extended"              default="false"/> 
@@ -56,7 +47,7 @@
     <arg name="dotProjectormA"        default="200.0"/>
     <arg name="floodLightmA"          default="200.0"/>
     <arg name="enableRviz"            default="true"/>
-    <arg name="enableMarkerPublish"   default="false" />
+    <arg name="enableMarkerPublish"   default="true" />
 
     <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
     <node name="stereo_inertial_publisher" pkg="depthai_examples" type="stereo_inertial_node" output="screen" required="true">
