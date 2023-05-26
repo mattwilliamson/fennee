@@ -1,6 +1,6 @@
 <launch>
     <arg name="description_name"           default="robot_description"/>
-    <arg name="description_file"           default="$(find fennee_description)/urdf/champ.urdf"/>
+    <arg name="description_file"           default="$(find fennee_description)/urdf/fennee.urdf"/>
 
     <param name="$(arg description_name)" textfile="$(arg description_file)"/>    
     <node name="champ_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
