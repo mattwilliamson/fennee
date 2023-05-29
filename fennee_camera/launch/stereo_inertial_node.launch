@@ -19,7 +19,8 @@
     <arg name="expTime"               default="20000"/>
     <arg name="sensIso"               default="800" />
 
-    <arg name="enableSpatialDetection" default="true" />
+    <!-- <arg name="enableSpatialDetection" default="true" /> -->
+    <arg name="enableSpatialDetection" default="false" />
     <arg name="syncNN"                 default="true" />
     <arg name="detectionClassesCount"  default="80"   />
     <arg name="nnName"                 default=""         />

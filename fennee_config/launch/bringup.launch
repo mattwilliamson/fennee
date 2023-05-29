@@ -84,27 +84,30 @@
         <group if="$(arg hardware_connected)">
             <include file="$(find fennee_camera)/launch/stereo_inertial_node.launch">
             <!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
-                <arg name="enableRviz"              value="$(arg rviz)"/>
+                <arg name="enableRviz"                 value="$(arg rviz)"/>
 
-                <arg name="nnName"                  value="yolov4_tiny_coco_416x416_openvino_2021.4_6shave_bgr.blob"/>
-                <arg name="previewWidth"            value="416"/>
-                <arg name="previewHeight"           value="416"/>
+                <arg name="nnName"                     value="yolov4_tiny_coco_416x416_openvino_2021.4_6shave_bgr.blob"/>
+                <arg name="previewWidth"               value="416"/>
+                <arg name="previewHeight"              value="416"/>
 
-                <!-- <arg name="nnName"                  value="deeplab_v3_plus_mnv2_decoder_256_openvino_2021.4.blob"/> -->
-                <!-- <arg name="previewWidth"            value="416"/> -->
-                <!-- <arg name="previewHeight"           value="416"/> -->
+                <!-- <arg name="nnName"                     value="deeplab_v3_plus_mnv2_decoder_256_openvino_2021.4.blob"/> -->
+                <!-- <arg name="previewWidth"               value="416"/> -->
+                <!-- <arg name="previewHeight"              value="416"/> -->
 
-                <!-- <arg name="nnName"                  value="mobilenet-ssd_openvino_2021.2_6shave.blob"/>
-                <arg name="previewWidth"            value="300"/>
-                <arg name="previewHeight"           value="300"/> -->
+                <!-- <arg name="nnName"                     value="mobilenet-ssd_openvino_2021.2_6shave.blob"/>
+                <arg name="previewWidth"               value="300"/>
+                <arg name="previewHeight"              value="300"/> -->
 
-                <arg name="camera_model"            value="$(arg camera_model)"/>
-                <arg name="monoResolution"          value="480p"/>
-                <arg name="rgbResolution"           value="1080p"/>
-                <arg name="confidence"              value="200" />
-                <arg name="stereo_fps"              value="15" />
-                <arg name="enableMarkerPublish"     value="true" />
-                <arg name="imuMode"                 value="0"  />   <!-- 0 -> COPY, 1 -> LINEAR_INTERPOLATE_GYRO, 2 -> LINEAR_INTERPOLATE_ACCEL -->
+                <arg name="camera_model"               value="$(arg camera_model)"/>
+                <arg name="monoResolution"             value="480p"/>
+                <arg name="rgbResolution"              value="1080p"/>
+                <arg name="confidence"                 value="200" />
+                <arg name="stereo_fps"                 value="15" />
+                <arg name="enableMarkerPublish"        value="false" />
+                <!-- <arg name="enableMarkerPublish"     value="true" /> -->
+                <arg name="enableSpatialDetection"     value="false" />
+                <!-- <arg name="enableSpatialDetection"     value="true" /> -->
+                <arg name="imuMode"                    value="0"  />   <!-- 0 -> COPY, 1 -> LINEAR_INTERPOLATE_GYRO, 2 -> LINEAR_INTERPOLATE_ACCEL -->
             </include>
 
 <!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
