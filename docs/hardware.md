@@ -3,10 +3,11 @@
 ## Parts List
 
 
-- [SpotMicro](https://spotmicroai.readthedocs.io/en/latest/)
+- [SpotMicro](https://spotmicroai.readthedocs.io/en/latest/) robot frame
 - [NVIDIA Jetson Nano](https://www.amazon.com/NVIDIA-Jetson-Nano-Developer-945-13450-0000-100/dp/B084DSDDLT/ref=sr_1_3?crid=K3EEP2QYGRKR&keywords=NVIDIA+Jetson+Nano&qid=1681300762&s=electronics&sprefix=nvidia+jetson+nano%252Celectronics%252C161&sr=1-3&ufe=app_do%253Aamzn1.fos.f5122f16-c3e8-4386-bf32-63e904010ad0&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=7d3968aff925cd432b2f563af53e1284&camp=1789&creative=9325) for high-level control
 - [SD Card](https://www.amazon.com/dp/B07FCMBLV6?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=d9ee3513e15091796e6be4dad591e27c&camp=1789&creative=9325)
-- [Freenove ESP32 Cam](https://www.amazon.com/Freenove-ESP32-WROVER-Bluetooth-Compatible-Tutorials/dp/B09BC5CNHM?&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=ae7b14c22685cad2407abdaab565e8d2&camp=1789&creative=9325) for low-level interfacing. Can probably use just about any [Arduino](https://www.amazon.com/gp/search?ie=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=e289d4057da769f17dc1e7b3221a4050&camp=1789&creative=9325&index=electronics&keywords=Arduino) or other [ESP32](https://www.amazon.com/gp/search?ie=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=2d1d81042a386509499b0f72ca5084ee&camp=1789&creative=9325&index=electronics&keywords=ESP32) or other MCUs that are supported but PlatformIO
+- LDS-01 LIDAR
+- USB TTL converter for LIDAR
 - PCA9685 PWM controller for controlling servos: https://www.adafruit.com/product/815
 - 12x [DS3218 Digital Servo Motor](https://www.amazon.com/gp/product/B07WYQ9P3F/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=aac388a45ead7e4239ba14d217c2a3e6&camp=1789&creative=9325)
 - [LiPO Battery](https://www.amazon.com/dp/B086D71TZC?psc=1&ref=ppx_yo2ov_dt_b_product_details&_encoding=UTF8&tag=aimatt02-20&linkCode=ur2&linkId=2e59462443f181c82c3a7a22fd7b1b8c&camp=1789&creative=9325) this one is 5200mAh 7.4v, but you have flexibility here
@@ -35,7 +36,7 @@
 
 ## TODO Documentation
 
-- [ ] Lidar specs 
+- [ ] Lidar specs - LDS-01 - https://emanual.robotis.com/docs/en/platform/turtlebot3/appendix_lds_01/ - https://medium.com/@Matthew_Hogan/interesting-electronic-components-1-hls-lfcd2-640d897f9fc9
 - [ ] Oak D Lite - needs right angle cable
 
 
