@@ -13,6 +13,7 @@ Check the [Hardware & Parts Details docs](./docs/hardware.md)
 - [Ubuntu 20.04 Jetson Image](https://github.com/Qengineering/Jetson-Nano-Ubuntu-20-image) flashed on SD card with [Balena Etcher](https://www.balena.io/etcher)
 - [ROS 1 Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
 - [Adafruit CircuitPython libraries](https://docs.circuitpython.org/projects/bundle/en/latest/drivers.html)
+- [LDS-01 LIDAR ROS Driver](http://wiki.ros.org/hls_lfcd_lds_driver)
 
 
 ## Install Fennee Packages
@@ -139,24 +140,25 @@ https://www.thingiverse.com/thing:4937631
 ## TODO
 
 - [ ] Make calibration launch file and parse yaml for servo_controller
-- [ ] Update URDF with longer body
+- [ ] Calibration script docs
+- [x] Update URDF with longer body
 - [ ] Package requirements are a mess. pip vs rosdep etc.
 - [ ] Charging connector
 - [ ] Add clips to battery clips for wires
 - [ ] Rear cover hole for voltmeter
-- [ ] Oak D Lite Camera mount
+- [x] Oak D Lite Camera mount
 - [ ] LED Ring sticking out under lidar?
-- [ ] Separate mount for IMU
+- [x] Separate mount for IMU
 - [ ] Supports around holes for covers
-- [ ] Custom top and bottom cover, speakers, mic, fan
+- [x] Custom top and bottom cover, speakers, mic, fan
 - [x] Lengthen chassis for more electronics room
-- [ ] Removable electronicts mount
+- [x] Removable electronicts mount
 - [x] Custom hip for metal servo arm
-- [ ] Custom mounting board for electronics
-- [ ] Custom nose for camera and LED ring
+- [x] Custom mounting board for electronics
+- [x] Custom nose for camera and LED ring
 - [x] Lengthen body
-- [ ] New cover with lidar mount and fan
-- [ ] Front camera
+- [x] New cover with lidar mount and fan
+- [x] Front camera
 - [ ] IMU Publisher
 - [x] Faster baud rate
 - [ ] Calibration config file
@@ -164,7 +166,7 @@ https://www.thingiverse.com/thing:4937631
 - [ ] 3d print instructions/list
 - [ ] Show loading screen while robot is waiting for ROS
 - [ ] LED ring
-- [ ] LIDAR
+- [x] LIDAR
 - [ ] Relay for servos
 - [ ] Some kind of quick release for covers - removing battery is annoying
 - [ ] Speakers/mic
@@ -219,6 +221,45 @@ rqt_image_view
 Record Video to output.avi
 ```sh
 fennee
-ROS_MASTER_URI=http://127.0.0.1:11311 rosrun image_view video_recorder image:=/mobilenet_publisher/color/image
+ROS_MASTER_URI=http://192.168.50.83:11311 rosrun image_view video_recorder image:=/mobilenet_publisher/color/image
 vlc output.avi
 ```
+
+Mapping
+```sh
+ROS_MASTER_URI=http://192.168.50.83:11311
+roslaunch fennee_config slam.launch     
+```
+
+Save map
+```sh
+roscd fennee_config/maps
+rosrun map_server map_saver
+```
+
+Autonomous Navigation
+```sh
+roslaunch fennee_config navigate.launch rviz:=true
+```
+
+
+
+roslaunch champ_config slam.launch rviz:=true
+
+
+roslaunch fennee_config navigate.launch
+
+
+
+# PS4 Controller
+*hold PS button and share button*
+
+```
+bluetoothctl
+scan on
+[NEW] Device A4:AE:12:BA:36:63 Wireless Controller
+
+pair A4:AE:12:BA:36:63
+trust A4:AE:12:BA:36:63
+```
+
