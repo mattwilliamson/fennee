@@ -349,7 +349,7 @@
    <xacro:depthai_camera camera_name="" parent="base_link"
       camera_model="$(arg camera_model)" base_frame="oak-d_frame" cam_pos_x="${body_length + 0.004}"
       cam_pos_y="0.0" cam_pos_z="-0.004" cam_roll="0.0"
-      cam_pitch="-0.174533" cam_yaw="0.0" />
+      cam_pitch="-0.174533" cam_yaw="3.14159" />
 
 
 </robot>
