@@ -709,7 +709,7 @@
   <joint name="_center_joint" type="fixed">
     <parent link="base_link"/>
     <child link="oak-d_frame"/>
-    <origin rpy="0.0 -0.174533 3.14159" xyz="0.169 0.0 -0.004"/>
+    <origin rpy="0.0 -0.174533 0.0" xyz="0.169 0.0 -0.004"/>
   </joint>
   <!-- device Center -->
   <link name="_model_origin">
