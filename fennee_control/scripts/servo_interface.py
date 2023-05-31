@@ -168,6 +168,7 @@ class ServoInterface:
     def handle_joint_commands(self, data: JointTrajectory):
         # rospy.loginfo("handle_joint_commands")
         self.joint_positions = data
+        self.set_servo_positions(data.points[0].positions)
 
 
     def publish_positions(self, event):
@@ -189,6 +190,8 @@ class ServoInterface:
         angles = joint_states_to_pwms(angles)
         msg = UInt16MultiArray(data=tuple(int(abs(a)) for a in angles))
         self.servo_states_topic.publish(msg)
+
+    def set_servo_positions(self, angles):
         for i, angle in enumerate(angles):
             self.pwm.servo[i].angle = angle
 
