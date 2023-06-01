@@ -30,7 +30,7 @@
       <origin rpy="0 0 3.1416" xyz="0 0 0"/>
     </collision>
     <inertial>
-      <mass value="2.80"/>
+      <mass value="3.4"/>
       <inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="100"/>
     </inertial>
   </link>
@@ -702,6 +702,7 @@
     <child link="rear_right_toe_link"/>
     <origin xyz="0 0 -0.13"/>
   </joint>
+  <!-- <xacro:arg name="camera_model"  default="OAK-D-LITE" /> -->
   <!-- <xacro:if value="${model == 'BW1098OAK'}">
     </xacro:if> -->
   <!-- base_link of the sensor-->
@@ -716,7 +717,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://depthai_descriptions/urdf/models/OAK-D-LITE.stl"/>
+        <mesh filename="package://depthai_descriptions/urdf/models/OAK-D.stl"/>
       </geometry>
       <material name="mat">
         <color rgba="0.8 0.8 0.8 0.8"/>
@@ -727,6 +728,12 @@
     <parent link="oak-d_frame"/>
     <child link="_model_origin"/>
     <origin rpy="1.5708 0 1.5708" xyz="0 0 0"/>
+  </joint>
+  <link name="_imu_frame"/>
+  <joint name="_imu_joint" type="fixed">
+    <parent link="oak-d_frame"/>
+    <child link="_imu_frame"/>
+    <origin rpy="0 1.5708 0" xyz="0.0 -0.015 -0.013662"/>
   </joint>
   <!-- RGB Camera -->
   <link name="_rgb_camera_frame"/>
@@ -767,4 +774,29 @@
     <parent link="_right_camera_frame"/>
     <child link="_right_camera_optical_frame"/>
   </joint>
+  <gazebo>
+    <plugin filename="libhector_gazebo_ros_imu.so" name="imu_controller">
+      <updateRate>50.0</updateRate>
+      <bodyName>imu_link</bodyName>
+      <topicName>imu/data</topicName>
+      <accelDrift>0.005 0.005 0.005</accelDrift>
+      <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
+      <rateDrift>0.005 0.005 0.005 </rateDrift>
+      <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
+      <headingDrift>0.005</headingDrift>
+      <headingGaussianNoise>0.005</headingGaussianNoise>
+    </plugin>
+  </gazebo>
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-09" ixy="0.0" ixz="0.0" iyy="1e-09" iyz="0.0" izz="1e-09"/>
+    </inertial>
+  </link>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+  </joint>
 </robot>
+
