@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="imu" pkg="fennee_control" type="imu_bno08x.py" output="screen">
+    <remap from="bno08x/raw" to="imu/raw" />
+  </node>
+</launch>

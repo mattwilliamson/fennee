@@ -795,8 +795,8 @@
     </inertial>
   </link>
   <joint name="imu_joint" type="fixed">
+    <origin rpy="3.14159 3.14159 3.14159" xyz="0.0 0.0 0.0"/>
     <parent link="base_link"/>
     <child link="imu_link"/>
   </joint>
 </robot>
-

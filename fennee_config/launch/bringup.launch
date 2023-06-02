@@ -8,7 +8,8 @@
     <arg name="gazebo"                 default="false" /> <!-- Set to true during simulation. This is auto-set to true from gazebo.launch. -->
     <arg name="rviz"                   default="false"/> <!-- Set to true to run rviz in parallel. -->
     <arg name="rviz_ref_frame"         default="odom"/> <!-- Default RVIZ reference frame. -->
-    <arg name="has_imu"                default="true" /> <!-- Set to true if you want to visualize robot but there's no IMU. Only useful for microcontrollers. -->
+    <!--<arg name="has_imu"                default="true" />--> <!-- Set to true if you want to visualize robot but there's no IMU. Only useful for microcontrollers. -->
+    <arg name="has_imu"                default="false" />  <!-- Set to false because we won't need to relay -->
     <arg name="lite"                   default="false" /> <!-- Set to true if you're using CHAMP lite version. Only useful for microcontrollers. -->
     <arg name="close_loop_odom"        default="false" /> <!-- Set to true if you want to calculate odometry using close loop. This is auto-set to true from gazebo.launch. -->
     <arg name="publish_foot_contacts"  default="true" /> <!-- Set to true if you want the controller to publish the foot contact states. This is auto-set to false from gazebo.launch. -->
@@ -24,7 +25,10 @@
     <arg name="joy"                    default="false"/>  <!-- Set to true to run teleop with joystick. -->
     <arg name="dev"                    default="/dev/input/js0"/> <!-- Joystick device-->
     <arg name="servo_connected"        default="true"/>  <!-- Set to true to send PWM signals. -->
-    <arg name="camera_model"           default="OAK-D-LITE"/>  <!-- Set to true to send PWM signals. -->
+
+    <arg name="camera_model"           default="OAK-D-LITE"/> 
+    <arg name="camera_connected"       default="false"/> 
+    
 
     <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
     <arg unless="$(eval arg('robot_name') == '/')" name="frame_prefix" value="$(arg robot_name)/" />
@@ -47,9 +51,6 @@
         <arg name="publish_foot_contacts"  value="$(arg publish_foot_contacts)" />
         <arg name="publish_joint_control"  value="$(arg publish_joint_control)" />
         <arg name="close_loop_odom"        value="$(arg close_loop_odom)" />
-
-        <!-- Use Camera IMU -->
-        <!-- <remap from="/stereo_inertial_publisher/imu" to="imu/raw" /> -->
     </include>
     
     <group if="$(arg hardware_connected)">
@@ -64,6 +65,12 @@
 
         <group if="$(arg laser_connected)">
             <include file="$(find fennee_config)/launch/laser.launch" />
+        </group>
+
+        <!-- IMU TODO: configurable -->
+        <!-- i2cdetect -r -y 1 -->
+        <group>
+            <include file="$(find fennee_control)/launch/imu_bno08x.launch" />
         </group>
     </group>
     
@@ -83,7 +90,7 @@
         
     </group>
 
-    <!-- <group if="$(arg camera_connected)"> -->
+    <group if="$(arg camera_connected)">
         <group if="$(arg hardware_connected)">
             <include file="$(find fennee_camera)/launch/stereo_inertial_node.launch">
             <!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
@@ -116,5 +123,5 @@
 <!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
 
         </group>
-    <!-- </group> -->
+    </group>
 </launch>
