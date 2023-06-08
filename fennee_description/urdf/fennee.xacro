@@ -357,10 +357,15 @@
 
    <!-- <origin rpy="-1.5708 3.14159 1.5708" xyz="0.0 -0.015 -0.013662"/> -->
    <!-- pitch: 3.14159-0.174533 -->
-   <xacro:depthai_camera camera_name="" parent="base_link"
+   <!-- TODO: Fix these, since the IMU needs to be rotated to 1.5708 3.14159 1.5708 -->
+   <!-- <xacro:depthai_camera camera_name="" parent="base_link"
       camera_model="$(arg camera_model)" base_frame="oak-d_frame" cam_pos_x="${body_length + 0.004}"
       cam_pos_y="0.0" cam_pos_z="-0.004" cam_roll="-1.5708"
-      cam_pitch="2.967057" cam_yaw="1.5708" />
+      cam_pitch="2.967057" cam_yaw="1.5708" /> -->
+   <xacro:depthai_camera camera_name="" parent="base_link"
+      camera_model="$(arg camera_model)" base_frame="oak-d_frame" cam_pos_x="${body_length + 0.004}"
+      cam_pos_y="0.0" cam_pos_z="-0.004" cam_roll="0.0"
+      cam_pitch="-0.174533" cam_yaw="0.0" />
 
    <gazebo>
       <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
