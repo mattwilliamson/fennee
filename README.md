@@ -139,6 +139,7 @@ https://www.thingiverse.com/thing:4937631
 
 ## TODO
 
+- [ ] rewrite IMU in c++
 - [ ] Make calibration launch file and parse yaml for servo_controller
 - [ ] Calibration script docs
 - [x] Update URDF with longer body
@@ -228,7 +229,7 @@ vlc output.avi
 Mapping
 ```sh
 ROS_MASTER_URI=http://192.168.50.83:11311
-roslaunch fennee_config slam.launch     
+roslaunch fennee_config slam.launch rviz:=true  
 ```
 
 Save map
@@ -262,4 +263,35 @@ scan on
 pair A4:AE:12:BA:36:63
 trust A4:AE:12:BA:36:63
 ```
+
+
+```sh
+roslaunch fennee_config bringup.launch hardware_connected:=true
+# roslaunch fennee_config bringup.launch hardware_connected:=true servo_connected:=false
+roslaunch champ_teleop teleop.launch joy:=true
+```
+
+
+
+
+# IMU
+http://docs.ros.org/en/melodic/api/robot_localization/html/preparing_sensor_data.html
+
+
+sensor_msgs/Imu - The IMU message is currently subject to some ambiguity, though this is being addressed by the ROS community. Most IMUs natively report orientation data in a world-fixed frame whose axes are defined by the vectors pointing to magnetic north and the center of the earth, respectively, with the Y axis facing east (90 degrees offset from the magnetic north vector). This frame is often referred to as NED (North, East, Down). However, REP-103 specifies an ENU (East, North, Up) coordinate frame for outdoor navigation. As of this writing, robot_localization assumes an ENU frame for all IMU data, and does not work with NED frame data. This may change in the future, but for now, users should ensure that data is transformed to the ENU frame before using it with any node in robot_localization.
+
+
+Measure +9.81
+ meters per second squared for the Z
+ axis.
+If the sensor is rolled +90
+ degrees (left side up), the acceleration should be +9.81
+ meters per second squared for the Y
+ axis.
+If the sensor is pitched +90
+ degrees (front side down), it should read -9.81
+ meters per second squared for the X
+ axis.
+
+ The IMU may also be oriented on the robot in a position other than its “neutral” position. For example, the user may mount the IMU on its side, or rotate it so that it faces a direction other than the front of the robot. This offset is typically specified by a static transform from the base_link_frame parameter to the IMU message’s frame_id. The state estimation nodes in robot_localization will automatically correct for the orientation of the sensor so that its data aligns with the frame specified by the base_link_frame parameter.
 
