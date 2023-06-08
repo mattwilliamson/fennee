@@ -171,6 +171,7 @@ https://www.thingiverse.com/thing:4937631
 - [ ] Relay for servos
 - [ ] Some kind of quick release for covers - removing battery is annoying
 - [ ] Speakers/mic
+- [ ] blacklist packages: ros-noetic-rosserial ros-noetic-rviz ros-noetic-gazebo-plugins
 
 
 
@@ -181,10 +182,10 @@ https://www.thingiverse.com/thing:4937631
 https://hub.docker.com/_/ros/
 
 Building the image
-`BUILD_SEQUENTIAL` is for lower memory systems, but takes longer.
+`LOW_MEM` is for lower memory systems, but takes longer.
 
 ```sh
-sudo docker build --build-arg BUILD_SEQUENTIAL=1 -t fennee .
+sudo docker build --build-arg LOW_MEM=1 -t fennee .
 ```
 
 ROS uses the ~/.ros/ directory for storing logs, and debugging info

@@ -14,7 +14,8 @@ PUBLISH_FREQUENCY = 200  # Hz
 SERVO_STATES_TOPIC = "servo_duty_cycles"
 JOINT_STATES_TOPIC = "joint_states"
 JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
-QUEUE_SIZE = 0
+OUT_QUEUE_SIZE = 10
+IN_QUEUE_SIZE = 1
 PCA_PWM_FREQUENCY = 50 # Hz for analog servos
 # MAX_ANGLE = 270 # degrees
 MAX_ANGLE = 180 # degrees
@@ -150,10 +151,10 @@ class ServoInterface:
         #     self.pwm.servo[i].actuation_range = MAX_ANGLE
         self.joint_positions = None
         self.servo_states_topic = rospy.Publisher(
-            SERVO_STATES_TOPIC, UInt16MultiArray, queue_size=QUEUE_SIZE
+            SERVO_STATES_TOPIC, UInt16MultiArray, queue_size=OUT_QUEUE_SIZE
         )
         self.joint_states_topic = rospy.Publisher(
-            JOINT_STATES_TOPIC, JointState, queue_size=QUEUE_SIZE
+            JOINT_STATES_TOPIC, JointState, queue_size=OUT_QUEUE_SIZE
         )
         self.msg = JointState()
         rospy.init_node("servo_interface")
@@ -161,7 +162,7 @@ class ServoInterface:
             JOINT_CONTROLLER_TOPIC,
             JointTrajectory,
             self.handle_joint_commands,
-            queue_size=1,
+            queue_size=IN_QUEUE_SIZE,
         )
         rospy.Timer(rospy.Duration(1.0 / PUBLISH_FREQUENCY), self.publish_positions)
 

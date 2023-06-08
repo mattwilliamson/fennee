@@ -1,10 +1,9 @@
 # TODO: inlcude gazebo if we are launching with GUI
-# TODO: handle BUILD_SEQUENTIAL=1 to build on jetson/pi - catkin build -j1 -l1
 
 ARG ROS_DISTRO=noetic
 FROM ros:${ROS_DISTRO}-ros-base
 ARG USE_RVIZ
-ARG BUILD_SEQUENTIAL=0
+ARG LOW_MEM=0
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
    && apt-get -y install --no-install-recommends \
@@ -37,9 +36,20 @@ RUN apt-get update && \
    rm -rf /var/lib/apt/lists/*
 
 # must run build twice for some reason
-RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then \
+RUN if [ "$LOW_MEM" = "1" ] ; then \
       . /opt/ros/${ROS_DISTRO}/setup.sh && \
-      catkin build -j1 -l1 || catkin build -j1 -l1; \
+      catkin build -j2 -l2 || catkin build -j2 -l2; \
+   else \
+      . /opt/ros/${ROS_DISTRO}/setup.sh && \
+      catkin build || catkin build; \
+   fi 
+
+# TODO: Move this
+RUN cd src && \
+   git clone -b noetic-devel https://github.com/ros-perception/imu_pipeline.git
+RUN if [ "$LOW_MEM" = "1" ] ; then \
+      . /opt/ros/${ROS_DISTRO}/setup.sh && \
+      catkin build -j2 -l2 || catkin build -j2 -l2; \
    else \
       . /opt/ros/${ROS_DISTRO}/setup.sh && \
       catkin build || catkin build; \
@@ -64,11 +74,11 @@ WORKDIR $WS
    
 RUN catkin config --extend ${UNDERLAY_WS}/devel && \
    rosdep install --from-paths src --ignore-src -r -y && \
-   catkin build -j1 -l1 
+   catkin build -j2 -l2
 
-RUN if [ "$BUILD_SEQUENTIAL" = "1" ] ; then \
+RUN if [ "$LOW_MEM" = "1" ] ; then \
       . ${WS}/devel/setup.sh && \
-      catkin build -j1 -l1; \
+      catkin build -j2 -l2; \
    else \
       . ${WS}/devel/setup.sh && \
       catkin build; \

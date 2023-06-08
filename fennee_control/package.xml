@@ -17,8 +17,25 @@
 
   <!-- https://github.com/ros/rosdistro/blob/master/rosdep/python.yaml -->
   <exec_depend>adafruit-pca9685-pip</exec_depend>
+  <!-- <exec_depend>adafruit-bno08x-pip</exec_depend> -->
   <!-- adafruit_blinka -->
   <!-- adafruit-circuitpython-servokit -->
+
+  <exec_depend>roslaunch</exec_depend>
+  <exec_depend>gmapping</exec_depend>
+  <exec_depend>hector_mapping</exec_depend>
+  <exec_depend>octomap</exec_depend>
+  <exec_depend>octomap_server</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>global_planner</exec_depend>
+  <exec_depend>navfn</exec_depend>
+  <exec_depend>dwa_local_planner</exec_depend>
+  <exec_depend>base_local_planner</exec_depend>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>pointcloud_to_laserscan</exec_depend>
+  <!-- <exec_depend>imu_bno055</exec_depend> -->
+  <!-- <exec_depend>hls_lfcd_lds_driver</exec_depend> -->
 
   
 </package>

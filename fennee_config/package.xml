@@ -12,7 +12,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <!-- <buildtool_depend>rosserial_arduino</buildtool_depend> -->
   <!-- <buildtool_depend>rosserial</buildtool_depend> -->
-  <exec_depend>champ_base</exec_depend>
+  <exec_depend>champ</exec_depend>
   <exec_depend>ros_controllers</exec_depend>
   <exec_depend>roslaunch</exec_depend>
   <exec_depend>rviz</exec_depend>

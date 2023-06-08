@@ -29,6 +29,16 @@
    <xacro:property name="shiftx" value="0.093" />
    <!-- <xacro:property name="shifty" value="0.0395" /> -->
    <xacro:property name="shifty" value="0.04285" />
+
+   <xacro:property name="has_imu" value="true" />
+   <xacro:property name="imu_offset_x" value="0.0" />
+   <xacro:property name="imu_offset_y" value="-0.15" />
+   <xacro:property name="imu_offset_z" value="-0.04" />
+   <xacro:property name="imu_r" value="0" />
+   <xacro:property name="imu_p" value="0" />
+   <xacro:property name="imu_y" value="-1.570795" />
+   <!-- <origin rpy="0 0 -1.570795" xyz="0.0 -0.15 -0.04"/> -->
+
    <!-- Macros -->
    <xacro:macro name="gen_shoulder" params="name left">
       <link name="${name}">
@@ -268,7 +278,7 @@
          <origin rpy="0 0 3.1416" xyz="0 0 0" />
       </collision>
       <inertial>
-         <mass value="2.80" />
+         <mass value="3.4" />
          <inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="100" />
       </inertial>
    </link>
@@ -343,13 +353,46 @@
    <!-- Camera  -->
    <xacro:include filename="$(find depthai_descriptions)/urdf/include/depthai_macro.urdf.xacro" />
 
-   <!-- <xacro:arg name="camera_model" default="OAK-D" /> -->
-   <xacro:arg name="camera_model"  default="OAK-D-LITE" />
+   <xacro:arg name="camera_model" default="OAK-D" />
 
+   <!-- <origin rpy="-1.5708 3.14159 1.5708" xyz="0.0 -0.015 -0.013662"/> -->
+   <!-- pitch: 3.14159-0.174533 -->
+   <!-- TODO: Fix these, since the IMU needs to be rotated to 1.5708 3.14159 1.5708 -->
+   <!-- <xacro:depthai_camera camera_name="" parent="base_link"
+      camera_model="$(arg camera_model)" base_frame="oak-d_frame" cam_pos_x="${body_length + 0.004}"
+      cam_pos_y="0.0" cam_pos_z="-0.004" cam_roll="-1.5708"
+      cam_pitch="2.967057" cam_yaw="1.5708" /> -->
    <xacro:depthai_camera camera_name="" parent="base_link"
       camera_model="$(arg camera_model)" base_frame="oak-d_frame" cam_pos_x="${body_length + 0.004}"
       cam_pos_y="0.0" cam_pos_z="-0.004" cam_roll="0.0"
       cam_pitch="-0.174533" cam_yaw="0.0" />
 
+   <gazebo>
+      <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
+            <updateRate>50.0</updateRate>
+            <bodyName>imu_link</bodyName>
+            <topicName>imu/data</topicName>
+            <accelDrift>0.005 0.005 0.005</accelDrift>
+            <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
+            <rateDrift>0.005 0.005 0.005 </rateDrift>
+            <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
+            <headingDrift>0.005</headingDrift>
+            <headingGaussianNoise>0.005</headingGaussianNoise>
+      </plugin>
+   </gazebo>
 
+   <link name="imu_link">
+      <inertial>
+            <mass value="0.001"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="1e-09" ixy="0.0" ixz="0.0" iyy="1e-09" iyz="0.0" izz="1e-09"/>
+      </inertial>
+   </link>
+
+   
+   <joint name="imu_joint" type="fixed">
+      <parent link="base_link" />
+      <child link="imu_link" />
+      <origin xyz="${imu_offset_x} ${imu_offset_y} ${imu_offset_z}" rpy="${imu_r} ${imu_p} ${imu_y}" />
+   </joint>
 </robot>
