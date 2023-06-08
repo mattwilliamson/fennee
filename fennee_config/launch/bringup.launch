@@ -9,7 +9,7 @@
     <arg name="rviz"                   default="false"/> <!-- Set to true to run rviz in parallel. -->
     <arg name="rviz_ref_frame"         default="odom"/> <!-- Default RVIZ reference frame. -->
     <!--<arg name="has_imu"                default="true" />--> <!-- Set to true if you want to visualize robot but there's no IMU. Only useful for microcontrollers. -->
-    <arg name="has_imu"                default="false" />  <!-- Set to false because we won't need to relay -->
+    <arg name="has_imu"                default="true" />  <!-- Set to false because we won't need to relay -->
     <arg name="lite"                   default="false" /> <!-- Set to true if you're using CHAMP lite version. Only useful for microcontrollers. -->
     <arg name="close_loop_odom"        default="false" /> <!-- Set to true if you want to calculate odometry using close loop. This is auto-set to true from gazebo.launch. -->
     <arg name="publish_foot_contacts"  default="true" /> <!-- Set to true if you want the controller to publish the foot contact states. This is auto-set to false from gazebo.launch. -->
@@ -26,8 +26,14 @@
     <arg name="dev"                    default="/dev/input/js0"/> <!-- Joystick device-->
     <arg name="servo_connected"        default="true"/>  <!-- Set to true to send PWM signals. -->
 
-    <arg name="camera_model"           default="OAK-D-LITE"/> 
-    <arg name="camera_connected"       default="false"/> 
+    <arg name="camera_model"           default="OAK-D"/> 
+    <arg name="camera_connected"       default="true"/> 
+
+    <arg name="imu_connected"          default="true"/> 
+
+    <arg name="publish_odom_tf"        default="true" />
+    <arg name="publish_local_odom_tf"  default="true" />
+    <arg name="run_state_estimation"   default="true" />
     
 
     <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
@@ -51,12 +57,14 @@
         <arg name="publish_foot_contacts"  value="$(arg publish_foot_contacts)" />
         <arg name="publish_joint_control"  value="$(arg publish_joint_control)" />
         <arg name="close_loop_odom"        value="$(arg close_loop_odom)" />
+
+        <!-- Don't run these, because we will run our own -->
+        <arg name="publish_odom_tf"         value="false" />
+        <arg name="publish_local_odom_tf"   value="false" />
+        <arg name="run_state_estimation"    value="false" />
     </include>
     
     <group if="$(arg hardware_connected)">
-        <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 3.14159 0 0 $(arg frame_prefix)base_link $(arg frame_prefix)laser" />
-        <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_imu"   args="0 0 0 0 0 0 $(arg frame_prefix)base_link $(arg frame_prefix)imu_link" />
-
         <include file="$(find fennee_config)/launch/position_controllers.launch"/>
 
         <group if="$(arg servo_connected)">
@@ -65,33 +73,36 @@
 
         <group if="$(arg laser_connected)">
             <include file="$(find fennee_config)/launch/laser.launch" />
+            <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 3.14159 0 0 $(arg frame_prefix)base_link $(arg frame_prefix)laser" />
         </group>
+
+        <!-- <group if="$(arg laser_connected)">
+            <include file="$(find fennee_config)/launch/laser.launch" />
+        </group> -->
 
         <!-- IMU TODO: configurable -->
         <!-- i2cdetect -r -y 1 -->
-        <group>
-            <include file="$(find fennee_control)/launch/imu_bno08x.launch" />
+        <group if="$(arg imu_connected)">
+            <node pkg="imu_transformer" type="imu_transformer_node" name="imu_data_transformer" output="screen">
+                <remap from="imu_in" to="imu_raw"/>
+                <remap from="imu_out" to="imu"/>
+                <param name="target_frame" value="base_link"/>
+            </node>
+
+            <!-- <include file="$(find fennee_control)/launch/imu_bno08x.launch" /> -->
+            <node name="imu" pkg="fennee_control" type="imu_bno08x.py" output="screen">
+                <remap from="imu/data" to="imu_raw/data"/>
+                <remap from="imu/mag" to="imu_raw/mag"/>
+            </node>
+
+            <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_imu" args="0 0 0 0 0 0  $(arg frame_prefix)base_link $(arg frame_prefix)imu_link" /> -->
+
+            <!-- Transform the IMU orientation to something Champ understands -->
+            <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="imu_raw_to_imu" args="0 0 0 1.5708 0 3.1416 $(arg frame_prefix)imu_link_raw $(arg frame_prefix)imu_link" /> -->
+
         </group>
-    </group>
-    
-
-
-
-    <group if="$(arg joy)">
-        <node if="$(arg joy)" name="joy" pkg="joy" type="joy_node" required="true">
-            <param name="autorepeat_rate" value="5" />
-            <param name="dev" value="$(arg dev)" />
-        </node>
-    
-        <!-- <node name="champ_teleop" pkg="champ_teleop" type="champ_teleop.py" output="screen" required="true"> -->
-        <node name="champ_teleop" pkg="champ_teleop" type="champ_teleop.py" required="true">
-                <param name="joy" value="$(arg joy)" />
-        </node>
         
-    </group>
-
-    <group if="$(arg camera_connected)">
-        <group if="$(arg hardware_connected)">
+        <group if="$(arg camera_connected)">
             <include file="$(find fennee_camera)/launch/stereo_inertial_node.launch">
             <!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
                 <arg name="enableRviz"                 value="$(arg rviz)"/>
@@ -113,15 +124,58 @@
                 <arg name="rgbResolution"              value="1080p"/>
                 <arg name="confidence"                 value="200" />
                 <arg name="stereo_fps"                 value="15" />
-                <arg name="enableMarkerPublish"        value="false" />
+                <arg name="enableMarkerPublish"        value="true" />
                 <!-- <arg name="enableMarkerPublish"     value="true" /> -->
                 <arg name="enableSpatialDetection"     value="false" />
                 <!-- <arg name="enableSpatialDetection"     value="true" /> -->
                 <arg name="imuMode"                    value="0"  />   <!-- 0 -> COPY, 1 -> LINEAR_INTERPOLATE_GYRO, 2 -> LINEAR_INTERPOLATE_ACCEL -->
             </include>
 
-<!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
+            <group unless="$(arg imu_connected)">
+                <node pkg="imu_transformer" type="imu_transformer_node" name="imu_data_transformer" output="screen">
+                    <remap from="imu_in" to="imu_raw"/>
+                    <remap from="imu_out" to="imu"/>
+                    <param name="target_frame" value="base_link"/>
+                </node>
+            </group>
+
+        <!-- <include file="$(find fennee_camera)/launch/detection_filter.launch"> -->
 
         </group>
     </group>
+    
+
+
+
+    <group if="$(arg joy)">
+        <node if="$(arg joy)" name="joy" pkg="joy" type="joy_node" required="true">
+            <param name="autorepeat_rate" value="5" />
+            <param name="dev" value="$(arg dev)" />
+        </node>
+    
+        <!-- <node name="champ_teleop" pkg="champ_teleop" type="champ_teleop.py" output="screen" required="true"> -->
+        <node name="champ_teleop" pkg="champ_teleop" type="champ_teleop.py" required="true">
+                <param name="joy" value="$(arg joy)" />
+        </node>
+        
+    </group>
+
+    <!-- ==================== STATE ESTIMATION ==================== -->
+    <node if="$(arg run_state_estimation)" pkg="champ_base" name="state_estimator" type="state_estimation_node" output="screen">
+        <param if="$(arg hardware_connected)" name="orientation_from_imu" value="true"/>
+        <param if="$(arg gazebo)" name="orientation_from_imu" value="true"/>            
+    </node>
+
+    <node if="$(arg publish_local_odom_tf)" pkg="robot_localization" type="ekf_localization_node" name="base_to_footprint_ekf"> 
+        <remap from="odometry/filtered" to="odom/local" />
+        <param name="base_link_frame" value="$(arg base_frame)" />
+        <rosparam command="load" file="$(find champ_base)/config/ekf/base_to_footprint.yaml" />
+    </node>
+
+    <node if="$(arg publish_odom_tf)" pkg="robot_localization" type="ekf_localization_node" name="footprint_to_odom_ekf"> 
+        <remap from="odometry/filtered" to="odom" />
+        <rosparam command="load" file="$(find fennee_config)/config/ekf/footprint_to_odom.yaml" />
+    </node>
+
+    
 </launch>

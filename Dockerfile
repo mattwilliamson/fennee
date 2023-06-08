@@ -44,6 +44,17 @@ RUN if [ "$LOW_MEM" = "1" ] ; then \
       catkin build || catkin build; \
    fi 
 
+# TODO: Move this
+RUN cd src && \
+   git clone -b noetic-devel https://github.com/ros-perception/imu_pipeline.git
+RUN if [ "$LOW_MEM" = "1" ] ; then \
+      . /opt/ros/${ROS_DISTRO}/setup.sh && \
+      catkin build -j2 -l2 || catkin build -j2 -l2; \
+   else \
+      . /opt/ros/${ROS_DISTRO}/setup.sh && \
+      catkin build || catkin build; \
+   fi 
+
 # Fennee
 ENV WS=/ws
 WORKDIR $WS
