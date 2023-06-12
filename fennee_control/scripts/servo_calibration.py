@@ -100,7 +100,10 @@ class ServoCalibration:
             angle = joint["angle"]
             multiplier = joint["multiplier"]
             # Calulate the offset compared to the initial calibration
-            angle_diff = angle - self.servo_calibration_original[joint_name]["angle"]
+            if multiplier > 0:
+                angle_diff = angle - self.servo_calibration_original[joint_name]["angle"]
+            else:
+                angle_diff = self.servo_calibration_original[joint_name]["angle"] - angle
             positions.append(math.radians(angle_diff))
 
         vel_cmd = JointTrajectory()
