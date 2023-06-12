@@ -5,7 +5,7 @@ front_left_leg:
   angle: 37
   multiplier: 1.0
 front_left_shoulder:
-  angle: 94
+  angle: 93
   multiplier: 1.0
 front_right_foot:
   angle: 38
