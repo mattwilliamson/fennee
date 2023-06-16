@@ -1,11 +1,23 @@
 knee_orientation : ">>"
 pantograph_leg : false
 odom_scaler: 1.0
-max_linear_velocity_x : 0.5
-max_linear_velocity_y : 0.25
+max_linear_velocity_x : 0.3
+max_linear_velocity_y : 0.15
 max_angular_velocity_z : 1.0
-com_x_translation : -0.045
-swing_height : 0.02
-stance_depth : 0.0
-stance_duration : 0.25
-nominal_height : 0.18
+com_x_translation : -0.027
+swing_height : 0.03
+stance_depth : 0.01
+stance_duration : 0.3
+nominal_height : 0.14
+
+
+# open quadruped
+# odom_scaler: 1.15
+# max_linear_velocity_x : 0.3
+# max_linear_velocity_y : 0.15
+# max_angular_velocity_z : 1.0
+# com_x_translation : -0.03
+# swing_height : 0.02
+# stance_depth : 0.0
+# stance_duration : 0.25
+# nominal_height : 0.15

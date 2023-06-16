@@ -54,8 +54,8 @@ class IMU(object):
         self.bno.enable_feature(BNO_REPORT_ACCELEROMETER)
         self.bno.enable_feature(BNO_REPORT_GYROSCOPE)
         self.bno.enable_feature(BNO_REPORT_MAGNETOMETER)
-        # self.bno.enable_feature(BNO_REPORT_ROTATION_VECTOR)
-        self.bno.enable_feature(BNO_REPORT_GEOMAGNETIC_ROTATION_VECTOR)
+        self.bno.enable_feature(BNO_REPORT_ROTATION_VECTOR)
+        # self.bno.enable_feature(BNO_REPORT_GEOMAGNETIC_ROTATION_VECTOR)
         # self.bno.enable_feature(BNO_REPORT_GAME_ROTATION_VECTOR)
         
         time.sleep(5) # ensure IMU is initialized
@@ -89,10 +89,10 @@ class IMU(object):
         raw_msg.angular_velocity.z = gyro_z
         
         # Swap axis to match ROS
-        # quat_j, quat_k, quat_i, quat_real = self.bno.quaternion
-        # quat_i, quat_j, quat_k, quat_real = self.bno.quaternion
-        quat_i, quat_j, quat_k, quat_real = self.bno.geomagnetic_quaternion
+        quat_i, quat_j, quat_k, quat_real = self.bno.quaternion
+        # quat_i, quat_j, quat_k, quat_real = self.bno.geomagnetic_quaternion
         # quat_i, quat_j, quat_k, quat_real = self.bno.game_quaternion
+        # quat_j, quat_k, quat_i, quat_real = self.bno.quaternion
         raw_msg.orientation.w = quat_real
         raw_msg.orientation.x = quat_i
         raw_msg.orientation.y = quat_j

@@ -68,7 +68,9 @@
         <include file="$(find fennee_config)/launch/position_controllers.launch"/>
 
         <group if="$(arg servo_connected)">
-            <include file="$(find fennee_control)/launch/servo_interface.launch" />
+            <include file="$(find fennee_control)/launch/servo_interface.launch">
+                <arg name="hardware_connected"     value="$(arg hardware_connected)" />
+            </include>
         </group>
 
         <group if="$(arg laser_connected)">
@@ -126,7 +128,7 @@
                 <arg name="stereo_fps"                 value="15" />
                 <arg name="enableMarkerPublish"        value="true" />
                 <!-- <arg name="enableMarkerPublish"     value="true" /> -->
-                <arg name="enableSpatialDetection"     value="false" />
+                <arg name="enableSpatialDetection"     value="true" />
                 <!-- <arg name="enableSpatialDetection"     value="true" /> -->
                 <arg name="imuMode"                    value="0"  />   <!-- 0 -> COPY, 1 -> LINEAR_INTERPOLATE_GYRO, 2 -> LINEAR_INTERPOLATE_ACCEL -->
             </include>

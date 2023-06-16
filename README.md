@@ -106,12 +106,10 @@ roslaunch fennee_config bringup.launch hardware_connected:=true
 
 ### Calibration
 
-```
-roslaunch fennee_config bringup.launch hardware_connected:=true publish_joint_control:=false
-```
+Start up a terminal GUI to set the servo offsets to a yaml file
 
 ```
-roslaunch champ_bringup joints_gui.launch
+roslaunch fennee_control servo_interface.launch calibrate:=true
 ```
 
 ```

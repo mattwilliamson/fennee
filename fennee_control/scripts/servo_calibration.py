@@ -1,85 +1,68 @@
 #!/usr/bin/python3
 
-# TODO: Publish to topic instead of writing to servos
+"""Default post is all legs pointing straight down, with the body level.
+Servos should be close to 90 deegrees pulse to reduce the amount of offset required"""
 
-"""This should publish to the JOINT_CONTROLLER_TOPIC so that the servo_interface will move the servos to the desired position.
-Currently, however, we will just set positions to 0 directly so that we can assemble the robot without it moving around.
-Ideally we would make this a GUI like the Champ UI so we can adjust each servo individually.
-"""
-
-from adafruit_servokit import ServoKit
+import rospy
+import math
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import curses
 from curses import wrapper
-from yaml import load, dump
+from yaml import dump
 try:
-    from yaml import CLoader as Loader, CDumper as Dumper
+    from yaml import CDumper as Dumper
 except ImportError:
-    from yaml import Loader, Dumper
+    from yaml import  Dumper
 
+JOINT_CONTROLLER_TOPIC = "joint_group_position_controller/command"
+OUT_QUEUE_SIZE = 1
 
-# from servo_interface import PWM_MAP, JOINT_NAMES, MAX_ANGLE
+"""We don't want to start the curses GUI until the servo_interface node has started"""
+class SubscriberListener(rospy.SubscribeListener):
+    def __init__(self, servo_calibration):
+        super(SubscriberListener, self).__init__()
+        self.servo_calibration = servo_calibration
 
-YAML_FILE = "pwm_map.yaml"
+    def peer_subscribe(self, topic_name, topic_publish, peer_publish):
+        self.servo_calibration.subscriber_started = True
+        # rospy.loginfo("Subscriber connected")
 
-MAX_ANGLE = 180  # degrees
-
-JOINT_NAMES = [
-    "front_left_shoulder",
-    "front_left_leg",
-    "front_left_foot",
-    # "front_left_toe",
-    "front_right_shoulder",
-    "front_right_leg",
-    "front_right_foot",
-    # "front_right_toe",
-    "rear_left_shoulder",
-    "rear_left_leg",
-    "rear_left_foot",
-    # "rear_left_toe",
-    "rear_right_shoulder",
-    "rear_right_leg",
-    "rear_right_foot",
-    # "rear_right_toe",
-]
-
-
-# PWM_MAP = {
-#     "front_left_foot": {"angle": 152, "multiplier": 1.0},
-#     "front_left_leg": {"angle": 35, "multiplier": 1.0},
-#     "front_left_shoulder": {"angle": 102, "multiplier": 1.0},
-#     "front_right_foot": {"angle": 40, "multiplier": -1.0},
-#     "front_right_leg": {"angle": 155, "multiplier": -1.0},
-#     "front_right_shoulder": {"angle": 98, "multiplier": 1.0},
-#     "rear_left_foot": {"angle": 155, "multiplier": 1.0},
-#     "rear_left_leg": {"angle": 53, "multiplier": 1.0},
-#     "rear_left_shoulder": {"angle": 102, "multiplier": -1.0},
-#     "rear_right_foot": {"angle": 45, "multiplier": -1.0},
-#     "rear_right_leg": {"angle": 155, "multiplier": -1.0},
-#     "rear_right_shoulder": {"angle": 98, "multiplier": -1.0},
-# }
-
-
-def degrees_to_percent(degrees):
-    return degrees / 180.0
-
-
-def degrees_to_bars(cols, degrees):
-    bar_count = int(degrees_to_percent(degrees) * float(cols))
-    return "[" + "#" * bar_count + " " * (cols - bar_count) + "]"
-
-
-def normalize_angle(degrees):
-    return max(0, min(MAX_ANGLE, degrees))
+    def peer_unsubscribe(self, topic_name, num_peers):
+        rospy.loginfo("Subscriber disconnected")
 
 
 class ServoCalibration:
     def __init__(self):
         super().__init__()
-        print("Initilizing I2C...")
-        self.pwm = ServoKit(channels=16)
-        print("I2C initialized.")
+        self.subscriber_started = False
+
+        rospy.init_node("servo_calibration")
+        
         self.selected = 0
-        self.PWM_MAP = load(open(YAML_FILE), Loader=Loader)
+        self.servo_calibration = rospy.get_param("servo_calibration")
+        self.servo_calibration_original = rospy.get_param("servo_calibration")
+        self.servo_calibration_file = rospy.get_param("servo_calibration_file")
+        self.hardware_connected = rospy.get_param("hardware_connected")
+        self.joint_names = rospy.get_param("/hardware_interface/joints")
+        self.max_angle = rospy.get_param("servo_max_angle")
+        self.servo_states_topic = rospy.Publisher(
+            JOINT_CONTROLLER_TOPIC, JointTrajectory,
+            queue_size=OUT_QUEUE_SIZE, 
+            subscriber_listener=SubscriberListener(self),
+            latch=True
+        )
+
+        rospy.SubscribeListener()
+
+    def wait_for_subscriber(self):
+        rospy.loginfo("Waiting for subscriber...")
+        while not self.subscriber_started:
+            rospy.sleep(.1)
+            if rospy.is_shutdown():
+                rospy.loginfo("Exiting...")
+                exit()
+        # Wait for logs to output
+        rospy.sleep(.5)
 
     def init_gui(self, stdscr):
         curses.noecho()
@@ -93,9 +76,9 @@ class ServoCalibration:
             0, 0, "Servo Joint             Angle".ljust(cols), curses.A_REVERSE
         )
 
-        for i, joint_name in enumerate(JOINT_NAMES):
+        for i, joint_name in enumerate(self.joint_names):
             row = i + 2
-            joint = self.PWM_MAP[joint_name]
+            joint = self.servo_calibration[joint_name]
             angle = joint["angle"]
             multiplier = joint["multiplier"]
             selected = i == self.selected
@@ -103,9 +86,34 @@ class ServoCalibration:
             d = dict(i=i, joint_name=joint_name, angle=angle)
             stdscr.addstr(row, 0, "{i:<2}: {joint_name:<20} {angle:<10}".format(**d), color)
             # TODO: Figure out if we can just append to the row instead of calculating the length of the string
-            stdscr.addstr(row, 35, degrees_to_bars(cols - 40, angle), color)
-            self.pwm.servo[i].angle = normalize_angle(angle)
+            stdscr.addstr(row, 35, self.degrees_to_bars(cols - 40, angle), color)
+        
+        self.publish_joint_trajectories()
             
+    def publish_joint_trajectories(self):
+        # if len(positions) != len(self.joint_names):
+        #     rospy.logerr("Number of positions does not match number of joints")
+        #     return
+        positions = []
+        for joint_name in self.joint_names:
+            joint = self.servo_calibration[joint_name]
+            angle = joint["angle"]
+            multiplier = joint["multiplier"]
+            # Calulate the offset compared to the initial calibration
+            if multiplier > 0:
+                angle_diff = angle - self.servo_calibration_original[joint_name]["angle"]
+            else:
+                angle_diff = self.servo_calibration_original[joint_name]["angle"] - angle
+            positions.append(math.radians(angle_diff))
+
+        vel_cmd = JointTrajectory()
+        vel_cmd.header.stamp = rospy.Time.now()
+        # vel_cmd.name = self.joint_names
+        vel_cmd.joint_names = self.joint_names
+        jtp = JointTrajectoryPoint()
+        jtp.positions = positions
+        vel_cmd.points.append(jtp)
+        self.servo_states_topic.publish(vel_cmd)
 
     def draw_menu(self, stdscr):
         stdscr.addstr(15, 0, "UP   / DOWN   to select servo ", curses.A_REVERSE)
@@ -114,12 +122,12 @@ class ServoCalibration:
 
     def draw_gui(self, stdscr):
         stdscr.clear()
-        while True:
+        while not rospy.is_shutdown():
             # stdscr.clear()
             self.draw_servos(stdscr)
             self.draw_menu(stdscr)
             stdscr.refresh()
-            joint_name = JOINT_NAMES[self.selected]
+            joint_name = self.joint_names[self.selected]
 
             # TODO: Toggle direction
             c = stdscr.getch()
@@ -130,23 +138,36 @@ class ServoCalibration:
             elif c == curses.KEY_DOWN:
                 self.selected += 1
             elif c == curses.KEY_LEFT:
-                self.PWM_MAP[joint_name]["angle"] -= 1
+                self.servo_calibration[joint_name]["angle"] -= 1
             elif c == curses.KEY_RIGHT:
-                self.PWM_MAP[joint_name]["angle"] += 1
+                self.servo_calibration[joint_name]["angle"] += 1
             elif c == 115:
                 # s = Save
-                dump(self.PWM_MAP, open(YAML_FILE, "w"), Dumper=Dumper)
+                dump(self.servo_calibration, open(self.servo_calibration_file, "w"), Dumper=Dumper)
+                rospy.signal_shutdown("Saved servo calibration")
                 return
             else:
                 # time.sleep(5)
                 stdscr.addstr(18, 0, "Key: {}".format(c))
-            self.selected = max(0, min(len(JOINT_NAMES) - 1, self.selected))
+            self.selected = max(0, min(len(self.joint_names) - 1, self.selected))
 
     def deinit_gui(self, stdscr):
         curses.nocbreak()
         stdscr.keypad(False)
         curses.echo()
         curses.endwin()
+
+    def degrees_to_percent(self, degrees):
+        return degrees / 180.0
+
+
+    def degrees_to_bars(self, cols, degrees):
+        bar_count = int(self.degrees_to_percent(degrees) * float(cols))
+        return "[" + "#" * bar_count + " " * (cols - bar_count) + "]"
+
+
+    def normalize_angle(self, degrees):
+        return max(0, min(self.max_angle, degrees))
 
 
 # def calibrate_servos():
@@ -157,9 +178,7 @@ class ServoCalibration:
 #         pwm.servo[i].angle = 90
 
 
-def main(stdscr):
-    # calibrate_servos()
-    sc = ServoCalibration()
+def main(stdscr):    
     sc.init_gui(stdscr)
     sc.draw_gui(stdscr)
     print("Done.")
@@ -167,4 +186,6 @@ def main(stdscr):
 
 
 if __name__ == "__main__":
+    sc = ServoCalibration()
+    sc.wait_for_subscriber()
     wrapper(main)

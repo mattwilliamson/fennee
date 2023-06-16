@@ -96,7 +96,7 @@
 
         <!-- Can possibly use this IMU if we don't have a dedicated one installed -->
         <!-- <remap from="/stereo_inertial_publisher/imu" to="/imu/data"/> -->
-        <remap from="/stereo_inertial_publisher/imu" to="/imu_raw/data"/>
+        <!-- <remap from="/stereo_inertial_publisher/imu" to="/imu_raw/data"/> -->
     </node>            
 
     <!-- <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen"/> -->
