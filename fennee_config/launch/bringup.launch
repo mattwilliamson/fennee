@@ -18,7 +18,9 @@
     <!-- TODO: Make this configurable -->
     <arg name="laser"                  default="sim"/> <!-- Set to the 2D LIDAR you're using. See https://github.com/chvmp/champ/tree/master/champ_bringup/launch/include/laser .-->
     <arg name="laser_connected"        default="true" /> <!-- TODO: Currently just HLS-LFCD2 -->
-
+    <!-- <arg name="laser_port"    value="/dev/ttyUSB0" /> -->
+    <!-- Jetson UART 2 GPIO Pins 8 and 10 -->
+    <arg name="laser_port"    value="/dev/ttyTHS1" />
 
     <arg name="joint_controller_topic" default="joint_group_position_controller/command" /> <!-- Change to remap command topic for actuator controller (ROS control).  -->
     <arg name="hardware_connected"     default="false" /> <!-- Flag useful to launch hardware connected launch files. This auto disables publishing joint_states. -->
@@ -74,13 +76,11 @@
         </group>
 
         <group if="$(arg laser_connected)">
-            <include file="$(find fennee_config)/launch/laser.launch" />
+            <include file="$(find fennee_config)/launch/laser.launch">
+                <arg name="port" value="$(arg laser_port)" />
+            </include>
             <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_to_laser" args="0 0 0 3.14159 0 0 $(arg frame_prefix)base_link $(arg frame_prefix)laser" />
         </group>
-
-        <!-- <group if="$(arg laser_connected)">
-            <include file="$(find fennee_config)/launch/laser.launch" />
-        </group> -->
 
         <!-- IMU TODO: configurable -->
         <!-- i2cdetect -r -y 1 -->
