@@ -2,6 +2,18 @@
 
 **F**oundation for **E**xperimental **N**eural **N**etwork **E**ndeavors
 
+
+### Printing Video
+[![Printing Fennee](http://img.youtube.com/vi/NxGy5EySv1w/0.jpg)](http://www.youtube.com/watch?v=NxGy5EySv1w "Printing Fennee")
+
+### Walking video
+[![Fennee on the Run](http://img.youtube.com/vi/MeTuUr-WjSU/0.jpg)](http://www.youtube.com/watch?v=MeTuUr-WjSU "Fennee on the run")
+
+
+
+
+
+
 ---
 
 # Hardware
