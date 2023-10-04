@@ -26,6 +26,24 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 from std_msgs.msg import UInt16MultiArray
 from adafruit_servokit import ServoKit
+import time
+
+# When multiplier is positive, the leg moves backwards as the angle increases
+
+# JOINT_NAMES = [
+#     "front_left_shoulder",    # 0
+#     "front_left_leg",         # 1
+#     "front_left_foot",        # 2
+#     "front_right_shoulder",   # 3
+#     "front_right_leg",        # 4
+#     "front_right_foot",       # 5
+#     "rear_left_shoulder",     # 6
+#     "rear_left_leg",          # 7
+#     "rear_left_foot",         # 8
+#     "rear_right_shoulder",    # 9
+#     "rear_right_leg",         # 10
+#     "rear_right_foot",        # 11
+# ]
 
 class ServoInterface:
     def __init__(self):
@@ -59,6 +77,8 @@ class ServoInterface:
             self.handle_joint_commands,
             queue_size=IN_QUEUE_SIZE,
         )
+        # Wait a moment for things to settle before publishing
+        time.sleep(1.0)
         rospy.Timer(rospy.Duration(1.0 / PUBLISH_FREQUENCY), self.publish_positions)
 
     def servo_calibration_to_pwm_map(self):
